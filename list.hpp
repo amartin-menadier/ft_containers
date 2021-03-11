@@ -70,8 +70,8 @@ namespace ft
 				iterator(Node<T> *ptr){_ptr = ptr;};
 			//	bool operator==(const iterator &other) const {return _ptr== other._ptr;};
 				bool operator!=(const iterator &other) const {return _ptr!= other._ptr;};
-				iterator &operator++() {_ptr = _ptr->_next; return *this;};//++i
-				iterator &operator--() {_ptr = _ptr->_prev; return *this;};//--i
+				iterator &operator++() {_ptr=_ptr->_next; return *this;};//++it
+				iterator &operator--() {_ptr=_ptr->_prev; return *this;};//--it
 				iterator operator++(int) { iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it; }; // it++
 				iterator operator--(int) { iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it; }; // it--				
 				T	&operator*(){return _ptr->_value;};//dereferencing
@@ -112,17 +112,38 @@ namespace ft
 			//fill (2)	
 			void assign (size_type n, const value_type& val)
 			{
-
 			};
 */
-
+			void	push_front(const T& val){insert(begin(), val);};
+			void	pop_front(){erase(begin());};
+			void	push_back(const T& val){insert(end(), val);};
+			void	pop_back(){std::cout << "pop_back: " << *(--end()) << "\n"; erase(--end());};
+			//insert
+				//single element (1)	
+			iterator insert (iterator position, const value_type& val)
+			{
+				Node<T> *newNode = new Node<T>(position.getPtr()->_prev, position.getPtr(), val);
+				position.getPtr()->_prev->_next = newNode;
+				position.getPtr()->_prev = newNode;
+				_size++;
+				return iterator(newNode);
+			};
+				//fill (2)	
+    		void insert (iterator position, size_type n, const value_type& val)
+			{
+				for (size_type i = 0; i<n; i++) 
+					insert(position, val);
+			};
+				//range (3)	
+			//template <class InputIterator>
+    		//oid insert (iterator position, InputIterator first, InputIterator last);
 			iterator erase (iterator position)
 			{
-// A MODIFIER
-				iterator ret = position;
-				ret++;
+// A MODIFIER // Pourquoi ??
+//				position.getPtr()->_next->_prev = 0;
 				position.getPtr()->_next->_prev = position.getPtr()->_prev;
 				position.getPtr()->_prev->_next = position.getPtr()->_next;
+				iterator ret(position.getPtr()->_next);
 				delete position.getPtr();
 				_size--;
 				return ret;
@@ -134,25 +155,43 @@ namespace ft
 					erase(it);
 				return (it);
 			};
-
+			void swap (list& x)
+			{
+				std::swap(_size, x._size);
+				std::swap(_list, x._list);
+			};
+			void resize (size_type n, value_type val = value_type())
+			{
+				while (n > _size)
+					push_back(val);
+				while (n < _size)
+					pop_back();
+			};
 			void clear(){erase(begin(), end());}
-			//Member functions
-			void	push_front(const T& value)
+
+//OPERATIONS
+			//splice
+				//entire list (1)	
+			void splice (iterator position, list& x)
 			{
-				Node<T> *front = new Node<T>(_list, _list->_next, value);
-				_list->_next->_prev = front;
-				_list->_next = front;
+				while(x._size)
+					splice(position, x, x.begin());
+			};
+				//single element (2)	
+			void splice (iterator position, list& x, iterator i)
+			{
+				i.getPtr()->_prev->_next = i.getPtr()->_next;
+				i.getPtr()->_next->_prev = i.getPtr()->_prev;
+				x._size--;
+				position.getPtr()->_prev->_next = i.getPtr();
+				i.getPtr()->_prev = position.getPtr()->_prev;
+				position.getPtr()->_prev = i.getPtr();
+				i.getPtr()->_next = position.getPtr();
 				_size++;
-			}
-
-			void	push_back(const T& value)
-			{
-				Node<T> *last = new Node<T>(_list->_prev, _list, value);
-				_list->_prev->_next = last;
-				_list->_prev = last;
-				_size++;				
-			}
-
+			};
+/*				//element range (3)	
+			void splice (iterator position, list& x, iterator first, iterator last);
+*/
 		private:
 			allocator_type	_allocator;
 			Node<T>			*_list;
