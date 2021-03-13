@@ -32,7 +32,7 @@ namespace ft
 			typedef typename Alloc::size_type		size_type;
 
 //CONSTRUCTORS
-			//default(1)
+			//default constructor(1)
 			explicit list (const allocator_type& alloc = allocator_type())
 				: _allocator(alloc), _size(0)
 			{
@@ -40,9 +40,9 @@ namespace ft
 				_list->_next = _list;
 				_list->_prev = _list;
 			};
-			//fill(2)
+			//fill constructor(2)
 			explicit list (size_type n, const value_type& val = value_type(),const allocator_type& alloc = allocator_type())
-				: _allocator(alloc), _size(n)
+				: _allocator(alloc), _size(0)
 			{
 				_list = new Node<T>(NULL, NULL, value_type());
 				_list->_next = _list;
@@ -50,13 +50,29 @@ namespace ft
 				for (size_type i = 0; i < n; i++)
 					push_front(val);
 			};
-			//range (3)	
+			//range constructor(3)	
 /*			template <class InputIterator>
 			list (InputIterator first, InputIterator last, const allocator_type& alloc = allocator_type());
-			//copy(4)
-			list (const list& x){*this = x;};
-*/
-		//	list& operator= (const list& x);
+*/			//copy constructor(4)
+			list (const list& x) : _allocator(x._allocator), _size(0)
+			{
+				_list = new Node<T>(NULL, NULL, value_type());
+				_list->_next = _list;
+				_list->_prev = _list;
+				*this = x;
+			};
+
+			list& operator= (const list& x)
+			{
+				clear();
+				Node<T> *tocopy = x._list->_next;
+				while (tocopy != x._list)
+				{
+					push_back(tocopy->_value);
+					tocopy = tocopy->_next;
+				}
+				return *this;
+			};
 	
 			//Destructor
 			~list(){delete _list;};
@@ -110,14 +126,17 @@ namespace ft
 	/*		template <class InputIterator>
 			void assign (InputIterator first, InputIterator last);
 			//fill (2)	
-			void assign (size_type n, const value_type& val)
+*/			void assign (size_type n, const value_type& val)
 			{
+				clear();
+				for (size_type i = 0; i < n; i++)
+					push_back(val);
 			};
-*/
+
 			void	push_front(const T& val){insert(begin(), val);};
 			void	pop_front(){erase(begin());};
 			void	push_back(const T& val){insert(end(), val);};
-			void	pop_back(){std::cout << "pop_back: " << *(--end()) << "\n"; erase(--end());};
+			void	pop_back(){erase(--end());};
 			//insert
 				//single element (1)	
 			iterator insert (iterator position, const value_type& val)
@@ -126,7 +145,7 @@ namespace ft
 				position.getPtr()->_prev->_next = newNode;
 				position.getPtr()->_prev = newNode;
 				_size++;
-				return iterator(newNode);
+				return iterator(--position);
 			};
 				//fill (2)	
     		void insert (iterator position, size_type n, const value_type& val)
@@ -137,10 +156,8 @@ namespace ft
 				//range (3)	
 			//template <class InputIterator>
     		//oid insert (iterator position, InputIterator first, InputIterator last);
-			iterator erase (iterator position)
+			iterator erase (iterator position)//fonctionne mal
 			{
-// A MODIFIER // Pourquoi ??
-//				position.getPtr()->_next->_prev = 0;
 				position.getPtr()->_next->_prev = position.getPtr()->_prev;
 				position.getPtr()->_prev->_next = position.getPtr()->_next;
 				iterator ret(position.getPtr()->_next);
@@ -148,12 +165,15 @@ namespace ft
 				_size--;
 				return ret;
 			};
-			iterator erase (iterator first, iterator last)
+			iterator erase (iterator first, iterator last)//fonctionne mal
 			{
-				iterator it;
-				for (it = first; it != last; it++)
+				iterator it = first;
+				while (it != last)
+				{
 					erase(it);
-				return (it);
+					it++;
+				}
+				return (last);
 			};
 			void swap (list& x)
 			{
@@ -167,17 +187,16 @@ namespace ft
 				while (n < _size)
 					pop_back();
 			};
-			void clear(){erase(begin(), end());}
+			void clear(){resize(0);}
 
 //OPERATIONS
-			//splice
-				//entire list (1)	
+			//splice: entire list (1)	
 			void splice (iterator position, list& x)
 			{
 				while(x._size)
 					splice(position, x, x.begin());
 			};
-				//single element (2)	
+			//splice: single element (2)	
 			void splice (iterator position, list& x, iterator i)
 			{
 				i.getPtr()->_prev->_next = i.getPtr()->_next;
@@ -189,101 +208,14 @@ namespace ft
 				i.getPtr()->_next = position.getPtr();
 				_size++;
 			};
-/*				//element range (3)	
+/*			//splice: element range (3)	
 			void splice (iterator position, list& x, iterator first, iterator last);
 */
+
 		private:
 			allocator_type	_allocator;
 			Node<T>			*_list;
 			size_type		_size;
-
-/*
---> Member types:
-
-	iterator	a bidirectional iterator to value_type	convertible to const_iterator
-	const_iterator	a bidirectional iterator to const value_type	
-	reverse_iterator	reverse_iterator<iterator>	
-	const_reverse_iterator	reverse_iterator<const_iterator>	
-	difference_type	a signed integral type, identical to: iterator_traits<iterator>::difference_type	usually the same as ptrdiff_t
-	size_type	an unsigned integral type that can represent any non-negative value of difference_type	usually the same as size_t
-
---> Member functions
-	Iterators:
-		begin 
-			Return iterator to beginning (public member function )
-		end
-			Return iterator to end (public member function )
-		rbegin
-			Return reverse iterator to reverse beginning (public member function )
-		rend
-			Return reverse iterator to reverse end (public member function )
-
-	Capacity:
-		empty
-			Test whether container is empty (public member function )
-		size
-			Return size (public member function )
-		max_size
-			Return maximum size (public member function )
-
-	Element access:
-		front
-			Access first element (public member function )
-		back
-			Access last element (public member function )
-
-	Modifiers:
-		assign
-			Assign new content to container (public member function )
-		push_front
-			Insert element at beginning (public member function )
-		pop_front
-			Delete first element (public member function )
-		push_back
-			Add element at the end (public member function )
-		pop_back
-			Delete last element (public member function )
-		insert
-			Insert elements (public member function )
-				single element (1)	
-					iterator insert (iterator position, const value_type& val);
-				fill (2)	
-    				void insert (iterator position, size_type n, const value_type& val);
-				range (3)	
-					template <class InputIterator>
-    				void insert (iterator position, InputIterator first, InputIterator last);
-		erase
-			Erase elements (public member function )
-		swap
-			Swap content (public member function )
-		resize
-			Change size (public member function )
-		clear
-			Clear content (public member function )
-
-	Operations:
-		splice
-			Transfer elements from list to list (public member function )
-		remove
-			Remove elements with specific value (public member function )
-		remove_if
-			Remove elements fulfilling condition (public member function template )
-		unique
-			Remove duplicate values (public member function )
-		merge
-			Merge sorted lists (public member function )
-		sort
-			Sort elements in container (public member function )
-		reverse
-			Reverse the order of elements (public member function )
-
---> Non-member function overloads
-	relational operators (list)
-		Relational operators for list (function )
-	swap (list)
-		Exchanges the contents of two lists (function template )
-*/
-
 
 	};
 }
