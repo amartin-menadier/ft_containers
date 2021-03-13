@@ -1,0 +1,1 @@
+#define COUT(value1, value2, value3) std::cout << value1 << ' ' << value2 << ' ' << value3;
