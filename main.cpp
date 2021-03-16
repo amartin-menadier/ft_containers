@@ -1,6 +1,7 @@
 #include "list.hpp"
 #include "containers.hpp"
 #include <list>
+#include <fstream>
 
 
 template <class list>
@@ -11,11 +12,16 @@ void display(list &toprint)
 	std::cout << std::endl;	
 }
 
+//Predicate ≃ bool function
+bool biggerThanEight(const int &totest){return (totest > 8);}
+//Binary Predicate ≃ bool function with two args
+bool isBiggerByTwo(int first, int next){return (first == next + 2);}
+//Compare ≃ Binary Predicate but comparing two args
+bool isSmaller(int first, int second){return (first < second);}
+
 template <class list>
 void testList(list list1, list list2, list list3, list list4)
 {
-	// LIST
-	// STD LIST
 	COUT("default constructor (1):", "", "");
 	display(list1);
 	COUT("fill constructor (2):", "", "");
@@ -33,6 +39,9 @@ void testList(list list1, list list2, list list3, list list4)
 	list1.push_front(7);
 	list1.push_back(2);
 	list1.push_back(1);
+	for(typename list::reverse_iterator Rit = list1.rbegin(); Rit != list1.rend(); Rit++)
+		std::cout << *Rit;
+	std::cout << std::endl;	
 	display(list1);//7654321
 	list1.erase(++list1.begin());
 	display(list1);//754321
@@ -59,8 +68,9 @@ void testList(list list1, list list2, list list3, list list4)
 	list2.resize(10);
 	display(list2);//7775493200
 	list2.splice(list2.begin(), list1, list1.begin());
-	display(list1);//549932
+	display(list1);//54932
 	display(list2);//77775493200
+	list3 = list1;
 	list2.splice(++(++(list2.begin())), list1);
 	display(list1);//
 	display(list2);//7754932775493200
@@ -72,37 +82,51 @@ void testList(list list1, list list2, list list3, list list4)
 	list1.merge(list2);
 	list1.sort();
 	display(list1);//00022223333444455557777779999
+	list1.merge(list3, isSmaller);//(list3 = 54932)
+	display(list1);//0002222333344445555547777779999932 
 	list1.remove(7);
-	display(list1);//00022223333444455559999
+	display(list1);//000222233334444555554999932
 	list1.unique();
-	display(list1);//023459
+	display(list1);//023454932
 	list1.reverse();
-	list2 = list1;
+	display(list1);//239454320
+	list1.sort(isSmaller);
+	display(list1);//022334459
+	list1.remove_if(biggerThanEight);
+	display(list1);//02233445
+	list1.unique(isBiggerByTwo);
+	display(list1);//02233445
 	COUT("list1:", "", "");
-	display(list1);//954320
+	display(list1);//02233445
 	COUT("list2:", "", "");
-	display(list2);//954320
+	list2 = list1;
+	display(list2);//02233445
 	COUT("list3:", "", "");
-	display(list3);//444
+	display(list3);//
 	COUT("list4:", "", "");
-	list4.push_back(8);
-	display(list4);//444448
+	list4.pop_back();
+	display(list4);//4444
 	COUT("Is list1 equal to list2?",(list1 == list2? "yes":"no"),"\n");
 	COUT("Is list1 equal to list3?",(list1 == list3? "yes":"no"),"\n");
 	COUT("Then they are different?",(list1 != list3? "yes":"no"),"\n");
 	COUT("Is list1 smaller than list3?",(list1 < list3? "yes":"no"),"\n");
 	COUT("Is list1 smaller or equal to list2?",(list1<=list2?"yes":"no"),"\n");
 	COUT("Is list1 bigger than list4?",(list1 > list4? "yes":"no"),"\n");
-	COUT("Is list1 bigger or equal to list2?",(list1>=list4? "yes":"no"),"\n");
+	COUT("Is list1 bigger or equal to list4?",(list1>=list4? "yes":"no"),"\n");
+	swap(list1, list4);
+	display(list1);
+	display(list4);
 	list1.clear();
 	COUT("Is list1 empty after clear?", (list1.empty()? "yes":"no"), "");
 
 	std::cout << std::endl;
-
 }
 
 int main()
 {
+	std::ofstream output;
+	std::ofstream ftOutput;
+
 	std::cout << "LIST\nSTD LIST" << std::endl;
 	std::list<int> stdList;	//default constructor (1/4)
 	std::list<int> stdList2(5, 4);//fill constructor (2/4)
@@ -110,7 +134,7 @@ int main()
 	std::list<int> stdList4(stdList2);//copy constructor (4/4)
 	testList(stdList, stdList2, stdList3, stdList4);
 
-	std::cout << "\nFT LIST" << std::endl;
+	std::cout << "------------------------------------\n\nFT LIST" << std::endl;
 	ft::list<int> ftList;	//default constructor (1/4)
 	ft::list<int> ftList2(5, 4);//fill constructor (2/4)
 	ft::list<int> ftList3(++ftList2.begin(), --ftList2.end());//range constructor(3/4)

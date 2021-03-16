@@ -42,9 +42,45 @@ namespace ft
 				bool operator!=(const iterator &other) const {return _ptr != other._ptr;};
 				iterator &operator++() {_ptr=_ptr->_next; return *this;};//++it
 				iterator &operator--() {_ptr=_ptr->_prev; return *this;};//--it
-				iterator operator++(int) { iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it; }; // it++
-				iterator operator--(int) { iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it; }; // it--				
+				iterator operator++(int) {iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it;}; // it++
+				iterator operator--(int) {iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it;}; // it--				
 				T	&operator*(){return _ptr->_element;};//dereferencing
+
+				Node<T> * getPtr() const{return _ptr;};
+				private:
+					Node<T>	*_ptr;
+			};
+			class reverse_iterator
+			{
+				public:
+				reverse_iterator():_ptr(NULL){};
+				reverse_iterator(const reverse_iterator &src){_ptr = src._ptr;};
+				reverse_iterator(Node<T> *ptr){_ptr = ptr;};
+				bool operator==(const reverse_iterator &other) const {return _ptr == other._ptr;};
+				bool operator!=(const reverse_iterator &other) const {return _ptr != other._ptr;};
+				reverse_iterator &operator++() {_ptr=_ptr->_prev; return *this;};//++it
+				reverse_iterator &operator--() {_ptr=_ptr->_next; return *this;};//--it
+				reverse_iterator operator++(int) {reverse_iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it;};//it++
+				reverse_iterator operator--(int) {reverse_iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it;};//it--
+				T	&operator*(){return _ptr->_element;};//dereferencing
+
+				Node<T> * getPtr() const{return _ptr;};
+				private:
+					Node<T>	*_ptr;
+			};
+			class const_reverse_iterator
+			{
+				public:
+				const_reverse_iterator():_ptr(NULL){};
+				const_reverse_iterator(const const_reverse_iterator &src){_ptr = src._ptr;};
+				const_reverse_iterator(Node<T> *ptr){_ptr = ptr;};
+				bool operator==(const const_reverse_iterator &other) const {return _ptr == other._ptr;};
+				bool operator!=(const const_reverse_iterator &other) const {return _ptr != other._ptr;};
+				const_reverse_iterator &operator++(){_ptr=_ptr->_prev; return *this;};//++it
+				const_reverse_iterator &operator--(){_ptr=_ptr->_next; return *this;};//--it
+				const_reverse_iterator operator++(int){const_reverse_iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it;};//it++
+				const_reverse_iterator operator--(int){const_reverse_iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it;};//it--
+				T	&operator*() const{return _ptr->_element;};//dereferencing
 
 				Node<T> * getPtr() const{return _ptr;};
 				private:
@@ -60,8 +96,8 @@ namespace ft
 				bool operator!=(const const_iterator &other) const {return _ptr != other._ptr;};
 				const_iterator &operator++() {_ptr=_ptr->_next; return *this;};//++it
 				const_iterator &operator--() {_ptr=_ptr->_prev; return *this;};//--it
-				const_iterator operator++(int) { const_iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it; }; // it++
-				const_iterator operator--(int) { const_iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it; }; // it--				
+				const_iterator operator++(int) {const_iterator it(this->_ptr); this->_ptr = this->_ptr->_next; return it;}; // it++
+				const_iterator operator--(int) {const_iterator it(this->_ptr); this->_ptr = this->_ptr->_prev; return it;}; // it--				
 				T	&operator*() const{return _ptr->_element;};//dereferencing
 
 				Node<T> * getPtr() const{return _ptr;};
@@ -138,10 +174,10 @@ namespace ft
 			const_iterator begin() const{return const_iterator(_list->_next);};
 			iterator end(){return iterator(_list);}
 			const_iterator end() const{return const_iterator(_list);};
-			//reverse_iterator rbegin();
-			//const_reverse_iterator rbegin() const;
-			//reverse_iterator rend();
-			//const_reverse_iterator rend() const;
+			reverse_iterator rbegin(){return reverse_iterator(_list->_prev);};
+			const_reverse_iterator rbegin() const;
+			reverse_iterator rend(){return reverse_iterator(_list);};
+			const_reverse_iterator rend() const;
 //ELEMENT ACCESS
 			reference front(){return (*begin());};
 			const_reference front() const {return (*begin());};
@@ -195,24 +231,22 @@ namespace ft
 					first++;
 				}
 			};
-			iterator erase (iterator position)//fonctionne mal
+			iterator erase (iterator position)
 			{
 				position.getPtr()->_next->_prev = position.getPtr()->_prev;
 				position.getPtr()->_prev->_next = position.getPtr()->_next;
-				iterator ret(position.getPtr()->_next);
+				iterator ret;
+				ret = iterator(position.getPtr()->_next);
 				delete position.getPtr();
 				_size--;
 				return ret;
 			};
-			iterator erase (iterator first, iterator last)//fonctionne mal
+			iterator erase (iterator first, iterator last)
 			{
 				iterator it = first;
 				while (it != last)
-				{
-					erase(it);
-					it++;
-				}
-				return (last);
+					it = erase(it);//returns iterator after the one erased
+				return last;
 			};
 			void swap (list& x)
 			{
@@ -267,16 +301,27 @@ namespace ft
 					it = next;
 				}
 			};
-			//template <class Predicate>
-			//	void remove_if (Predicate pred);
+			template <class Predicate>//Predicate ≃ bool function
+			void remove_if (Predicate pred){
+				iterator it = begin();
+				iterator next;
+				while(it != end())
+				{
+					next = it.getPtr()->_next;
+					if (pred(*it))
+						erase(it);
+					it = next;
+				}
+			};
 			//unique (1)	
 			void unique()
 			{
 				iterator it = _list->_next->_next;
 				iterator prev = begin();
+				iterator next;
 				while (it != end())
 				{
-					iterator next = iterator (it.getPtr()->_next);
+					next = iterator (it.getPtr()->_next);
 					if (*prev == *it)
 						erase(it);
 					else
@@ -285,13 +330,52 @@ namespace ft
 				}
 			};
 			//unique (2)	
-			//template <class BinaryPredicate>
-  			//void unique (BinaryPredicate binary_pred);
+			template <class BinaryPredicate>//bool function with two args
+  			void unique (BinaryPredicate binary_pred)
+			{
+				iterator it = ++begin();
+				iterator prev;
+				iterator next;
+				while (it != end())
+				{
+					next = iterator (it.getPtr()->_next);
+					prev = iterator (it.getPtr()->_prev);
+					if (binary_pred(*prev, *it))
+						erase(it);
+					else
+						prev = it;
+					it = next;
+				}
+			};
 			//merge (1)	
 			void merge (list& x){splice(begin(), x);};
 			//merge (2)	
-			//template <class Compare>
-			//void merge (list& x, Compare comp);
+			template <class Compare>//bool function comparing two elements
+			void merge (list& x, Compare comp){//to use with sorted lists
+				if (&x == this)
+					return;
+				iterator it = begin();
+				iterator itX = x.begin();
+				iterator xNext;
+				while (itX != x.end())
+				{
+					while (it != end())
+					{
+						if (comp(*itX, *it))
+						{
+							xNext = iterator (itX.getPtr()->_next);
+							splice(it, x, itX);
+							itX = xNext;
+						}
+						else
+							it++;
+					}
+					xNext = iterator (itX.getPtr()->_next);
+					splice(it, x, itX);
+					itX = xNext;
+				}
+			};
+
 			//sort (1)
 			void sort() {
 				Node<T> *a = _list->_next;
@@ -299,7 +383,7 @@ namespace ft
 				Node<T> *bef;
 				Node<T> *aft;
 				while (b != _list)
-				{ 	// bef -> a -> b -> aft
+				{	// bef -> a -> b -> aft
 					if (b->_element < a->_element) 
 					{
 						bef = a->_prev;
@@ -325,8 +409,38 @@ namespace ft
 				}
 			}
 			//sort (2)	
-			//template <class Compare>
-			//void sort (Compare comp);
+			template <class Compare>
+			void sort (Compare comp){
+				Node<T> *a = _list->_next;
+				Node<T> *b = a->_next;
+				Node<T> *bef;
+				Node<T> *aft;
+				while (b != _list)
+				{	// bef -> a -> b -> aft
+					if (comp(b->_element, a->_element)) 
+					{
+						bef = a->_prev;
+						aft = b->_next;
+						// link bef -> b
+						bef->_next = b;
+						b->_prev = bef;
+						// link b -> a
+						b->_next = a;
+						a->_prev = b;
+						// link a-> aft
+						a->_next = aft;
+						aft->_prev = a;
+						// retun to begin
+						a = _list->_next;
+						b = a->_next;
+					} 
+					else 
+					{
+						a = a->_next;
+						b = b->_next;
+					}
+				}				
+			};
 			void reverse() {
 				Node<T> *cur = _list->_next;
 				Node<T> *next;
@@ -355,10 +469,10 @@ namespace ft
 			size_type		_size;
 
 	};
-}
+};
 
 // RELATIONAL OPERATORS
-//(1)	
+//==(1)	
 template <class T, class Alloc>
 bool operator== (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -377,8 +491,8 @@ bool operator== (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 		return true;
 	else
 		return false;
-  };
-//(2)	
+};
+//!=(2)	
 template <class T, class Alloc>
 bool operator!= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -387,7 +501,7 @@ bool operator!= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 	else
 		return true;
 };
-//(3)	
+//<(3)	
 template <class T, class Alloc>
 bool operator<(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -406,8 +520,8 @@ bool operator<(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 		return true;
 	else
 		return false;
-  };
-//(4)	
+};
+//<=(4)	
 template <class T, class Alloc>
 bool operator<= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -416,7 +530,7 @@ bool operator<= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 	else
 		return false;
 };
-//(5)	
+//>(5)	
 template <class T, class Alloc>
 bool operator>(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -425,7 +539,7 @@ bool operator>(const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 	else
 		return false;
 };
-//(6)	
+//>=(6)	
 template <class T, class Alloc>
 bool operator>= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 {
@@ -435,9 +549,7 @@ bool operator>= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 		return false;
 };
 
-
-//template <class T, class Alloc>
-//void swap (list<T,Alloc>& x, list<T,Alloc>& y);
-
+template <class T, class Alloc>
+void swap (ft::list<T,Alloc>& x, ft::list<T,Alloc>& y){x.swap(y);};
 
 #endif /* ************************************************************ LIST_H */
