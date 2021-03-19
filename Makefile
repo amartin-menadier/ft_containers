@@ -19,7 +19,7 @@ $(BUILD_DIR)/%.o: %.cpp Makefile
 	@clang++ $(CFLAGS) -o $@ -c $< 1>/dev/null
 
 clean:
-	@/bin/rm -rf $(BUILD_DIR) 1>/dev/null
+	@/bin/rm -rf $(BUILD_DIR) ft.txt std.txt 1>/dev/null
 
 fclean: clean
 	@/bin/rm -f $(NAME) 1>/dev/null
@@ -29,9 +29,34 @@ re:
 	@make all 1>/dev/null
 
 run:
-	@make re  1>/dev/null
-	./$(NAME)
+	@make list
+	@make vector
 	@make fclean  1>/dev/null
+
+list: 
+	@clang++ $(CFLAGS) list.hpp containers.hpp list.cpp 
+	./a.out 
+	@rm a.out *.hpp.gch 1>/dev/null
+
+list_compare:
+	@clang++ $(CFLAGS) list.hpp containers.hpp list.cpp 
+	@./a.out std 1>./std.txt
+	@./a.out ft 1>./ft.txt
+	@diff std.txt ft.txt 
+	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
+
+vector: 
+	@clang++ $(CFLAGS) vector.hpp containers.hpp vector.cpp 
+	./a.out 
+	@rm a.out *.hpp.gch 1>/dev/null
+
+vector_compare:
+	@clang++ $(CFLAGS) vector.hpp containers.hpp vector.cpp 
+	@./a.out std 1>./std.txt
+	@./a.out ft 1>./ft.txt
+	@diff std.txt ft.txt 
+	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
+
 
 valgrind:
 	@make re
