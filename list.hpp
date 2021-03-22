@@ -175,9 +175,9 @@ namespace ft
 			iterator end(){return iterator(_list);}
 			const_iterator end() const{return const_iterator(_list);};
 			reverse_iterator rbegin(){return reverse_iterator(_list->_prev);};
-			const_reverse_iterator rbegin() const;
+			const_reverse_iterator rbegin() const{return const_reverse_iterator(_list->_prev);};
 			reverse_iterator rend(){return reverse_iterator(_list);};
-			const_reverse_iterator rend() const;
+			const_reverse_iterator rend() const{return const_reverse_iterator(_list);};
 //ELEMENT ACCESS
 			reference front(){return (*begin());};
 			const_reference front() const {return (*begin());};

@@ -67,83 +67,71 @@ void testvector(vector &vector1,vector &vector2,vector &vector3,vector &vector4)
 	vector1.push_back(6);
 	vector1.push_back(7);
 	display(vector1);
-	vector1.pop_back();
-	vector1.pop_back();
-	vector1.pop_back();
-	vector1.pop_back();
-	vector1.pop_back();
-	vector1.pop_back();
+	std::cout << vector1.capacity() << std::endl;
+	vector3 = vector1;
+	display(vector3);
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	vector3.pop_back();
+	std::cout << vector3.capacity() << std::endl;
+	display(vector3);
+	std::cout << vector3.capacity() << std::endl;
+	std::cout << vector1.capacity() << std::endl;
 	display(vector1);
-	std::cout << vector1.capacity();
-/*
-
 	for(typename vector::reverse_iterator Rit = vector1.rbegin(); Rit != vector1.rend(); Rit++)
 		std::cout << *Rit;
 	std::cout << std::endl;	
-	display(vector1);//7654321
+	display(vector1);
 	vector1.erase(++vector1.begin());
-	display(vector1);//754321
-	vector1.pop_front();
+	display(vector1);
 	vector1.pop_back();
-	display(vector1);//5432
+	display(vector1);
 	vector1.insert(++(++vector1.begin()), 9);
 	vector1.insert(vector1.begin(), 3, 7);		
-	display(vector1);//7754932
+	display(vector1);
 	COUT("Is vector1 empty?", (vector1.empty()? "yes":"no"), "");
 	COUT("\nIts size is", vector1.size(), "and it can contain up to ");
 	COUT(vector1.max_size(), "elements\nIts first element is", vector1.front());
 	COUT(" and its last one is", vector1.back(), "\n");
+	vector2.reserve(2);
+	std::cout << vector2.capacity() << std::endl;
+	vector2.reserve(50);
+	std::cout << vector2.capacity() << std::endl;
+	display(vector2);
+	std::cout << vector1.at(5) << std::endl;
 	vector2.assign(3, 8);
-	display(vector2);//888
+	display(vector2);
 	vector2.assign(++(++(vector1.begin())), vector1.end());
-	display(vector2);//754932
+	display(vector2);
 	vector1.swap(vector2);
-	display(vector2);//77754932
+	display(vector2);
 	vector2.resize(13);
-	display(vector2);//7775493200000
+	display(vector2);
 	vector2.resize(15, 9);
-	display(vector2);//777549320000099
+	display(vector2);
 	vector2.resize(10);
-	display(vector2);//7775493200
-	vector2.splice(vector2.begin(), vector1, vector1.begin());
-	display(vector1);//54932
-	display(vector2);//77775493200
-	vector3 = vector1;
-	vector2.splice(++(++(vector2.begin())), vector1);
-	display(vector1);//
-	display(vector2);//7754932775493200
-	vector1.push_front(5);
+	display(vector2);
 	vector1.insert(vector1.begin(), ++(++(++(vector2.begin()))), --vector2.end());
-	display(vector1);//49327754493205
-	vector1.splice(++vector1.begin(), vector2,++(++(++(vector2.begin()))), vector2.end());
-	display(vector1);//44932775493200932775493205
-	vector1.merge(vector2);
-	vector1.sort();
-	display(vector1);//00022223333444455557777779999
-	vector1.merge(vector3, isSmaller);//(vector3 = 54932)
-	display(vector1);//0002222333344445555547777779999932 
-	vector1.remove(7);
-	display(vector1);//000222233334444555554999932
-	vector1.unique();
-	display(vector1);//023454932
-	vector1.reverse();
-	display(vector1);//239454320
-	vector1.sort(isSmaller);
-	display(vector1);//022334459
-	vector1.remove_if(biggerThanEight);
-	display(vector1);//02233445
-	vector1.unique(isBiggerByTwo);
-	display(vector1);//02233445
+	display(vector1);
 	COUT("vector1:", "", "");
-	display(vector1);//02233445
+	display(vector1);
 	COUT("vector2:", "", "");
 	vector2 = vector1;
-	display(vector2);//02233445
+	display(vector2);
 	COUT("vector3:", "", "");
-	display(vector3);//
+	display(vector3);
 	COUT("vector4:", "", "");
 	vector4.pop_back();
-	display(vector4);//4444
+	display(vector4);
 	COUT("Is vector1 equal to vector2?",(vector1 == vector2? "yes":"no"),"\n");
 	COUT("Is vector1 equal to vector3?",(vector1 == vector3? "yes":"no"),"\n");
 	COUT("Then they are different?",(vector1 != vector3? "yes":"no"),"\n");
@@ -156,7 +144,6 @@ void testvector(vector &vector1,vector &vector2,vector &vector3,vector &vector4)
 	display(vector4);
 	vector1.clear();
 	COUT("Is vector1 empty after clear?", (vector1.empty()? "yes":"no"), "");
-*/
 	std::cout << std::endl;
 }
 
@@ -179,10 +166,9 @@ int main(int argc, char **argv)
 	std::cout << "------------------------------------\n\nFT VECTOR"<<std::endl;
 	ft::vector<int> ftvector;	//default constructor (1/4)
 	ft::vector<int> ftvector2(5, 4);//fill constructor (2/4)
-//	ft::vector<int> ftvector3(++ftvector2.begin(), --ftvector2.end());//range constructor(3/4)
-//	ft::vector<int> ftvector4(ftvector2);//copy constructor (4/4)
-	testvector(ftvector, ftvector2, ftvector, ftvector);
-//	testvector(ftvector, ftvector2, ftvector3, ftvector4);
+	ft::vector<int> ftvector3(++ftvector2.begin(), --ftvector2.end());//range constructor(3/4)
+	ft::vector<int> ftvector4(ftvector2);//copy constructor (4/4)
+	testvector(ftvector, ftvector2, ftvector3, ftvector4);
 	}
 
 	return (0);

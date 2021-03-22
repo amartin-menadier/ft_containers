@@ -73,6 +73,7 @@ void testList(list &list1, list &list2, list &list3, list &list4)
 	display(list1);//
 	display(list2);//7754932775493200
 	list1.push_front(5);
+	display(list1);
 	list1.insert(list1.begin(), ++(++(++(list2.begin()))), --list2.end());
 	display(list1);//49327754493205
 	list1.splice(++list1.begin(), list2,++(++(++(list2.begin()))), list2.end());
