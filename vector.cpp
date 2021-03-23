@@ -10,13 +10,6 @@ void display(vector &toprint)
 	std::cout << std::endl;	
 }
 
-//Predicate ≃ bool function
-bool biggerThanEight(const int &totest){return (totest > 8);}
-//Binary Predicate ≃ bool function with two args
-bool isBiggerByTwo(int first, int next){return (first == next + 2);}
-//Compare ≃ Binary Predicate but comparing two args
-bool isSmaller(int first, int second){return (first < second);}
-
 template <class vector>
 void testvector(vector &vector1,vector &vector2,vector &vector3,vector &vector4)
 {
@@ -30,33 +23,33 @@ void testvector(vector &vector1,vector &vector2,vector &vector3,vector &vector4)
 	display(vector4);
 	COUT("Is vector1 empty?", (vector1.empty()? "yes":"no"), "\n");
 	COUT("Its capacity is", vector1.capacity(), "\n");
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	vector2.push_back(5);
-	COUT("What is vector 2's capacity?", vector2.capacity(), "\n");
+	COUT("What is vector2's capacity?", vector2.capacity(), "\n");
 	display(vector1);
 	vector1.push_back(1);
 	display(vector1);

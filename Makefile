@@ -35,7 +35,7 @@ run:
 
 list: 
 	@clang++ $(CFLAGS) list.hpp containers.hpp list.cpp 
-	./a.out 
+	@./a.out 
 	@rm a.out *.hpp.gch 1>/dev/null
 
 list_compare:
@@ -47,7 +47,7 @@ list_compare:
 
 vector: 
 	@clang++ $(CFLAGS) vector.hpp containers.hpp vector.cpp 
-	./a.out 
+	@./a.out 
 	@rm a.out *.hpp.gch 1>/dev/null
 
 vector_compare:
@@ -57,6 +57,17 @@ vector_compare:
 	@- diff std.txt ft.txt
 	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
+map: 
+	@clang++ $(CFLAGS) map.hpp containers.hpp map.cpp 
+	@./a.out 
+	@rm a.out *.hpp.gch 1>/dev/null
+
+map_compare:
+	@clang++ $(CFLAGS) map.hpp containers.hpp map.cpp 
+	@./a.out std 1>./std.txt
+	@./a.out ft 1>./ft.txt
+	@- diff std.txt ft.txt
+	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
 valgrind:
 	@make re
@@ -65,3 +76,4 @@ valgrind:
 .PHONY: all, clean, fclean, re, all
 
 # '-' before command instructs to continue even if the command returns an error value
+# '@' before command instructs not to echo it on the screen
