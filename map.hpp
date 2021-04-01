@@ -8,11 +8,14 @@ namespace ft
 {
 	template <typename T>
 	struct less{bool operator()(const T &a,const T &b) const{return (a < b);};};
+
 	template <class Key, class T>
 	struct pair{
+		pair(Key first, T second): first(first), second(second){};
 		Key		first;
 		T		second;
 	};
+
 	template <class Key, class T>
 	struct Node{
 		Node(pair<Key, T> pair): _pair(pair), _prev(NULL), _next(NULL){};
@@ -20,6 +23,7 @@ namespace ft
 		Node<Key, T>	*_prev;
 		Node<Key, T>	*_next;		
 	};
+
 	template <class Key, class T, class Compare = less<Key> >
 	class map
 	{
@@ -37,7 +41,7 @@ namespace ft
 				public:
 				iterator():_ptr(NULL){};
 				iterator(const iterator & src){_ptr = src._ptr;};
-				iterator(Node<Key, T> *ptr){_ptr = ptr;};
+				iterator(Node<Key, T> *ptr){_ptr = ptr; setValues();};
 				bool operator==(const iterator &other) const {return _ptr == other._ptr;};
 				bool operator!=(const iterator &other) const {return _ptr != other._ptr;};
 				iterator &operator++(){
@@ -57,16 +61,20 @@ namespace ft
 					iterator it(this->_ptr);
 					this->_ptr = this->_ptr->_prev;
 					setValues();
-					return it;}; // it--				
+					return it;}; // it--
+		//		iterator &operator*(){return this->_ptr;};
+		//		iterator *operator->(){return &this->operator*());};
+				pair<Key, T> *operator->(){return &(_ptr->_pair);};
 
 				Node<Key, T> * getPtr() const{return _ptr;};
 				void	setValues(){
-					first = _ptr->_pair->first;
-					second = _ptr->_pair->second;}
-				private:
-					Node<Key, T>	*_ptr;
-					Key first;
-					T	second;
+					first = &_ptr->_pair.first;
+					second = &_ptr->_pair.second;};
+	
+
+				Key *first;
+				T	*second;
+				Node<Key, T>	*_ptr;
 			};
 	/*		class const_iterator
 			{
@@ -164,8 +172,9 @@ namespace ft
 			};
 			//Destructor
 			~map(){delete _map;};
+*/
 //ITERATORS
-		*/	iterator begin(){return iterator(_map);}
+			iterator begin(){return iterator(_map);}
 		/*	const_iterator begin() const{return const_iterator(_map);};
 		*/	iterator end(){return iterator(_map + _size);}
 		/*	const_iterator end() const{return const_iterator(_map+_size);};
@@ -236,9 +245,18 @@ namespace ft
 */			//single element (1)	
 			pair<iterator,bool> insert (const value_type& val)
 			{
-				val.first;
-				iterator it;
-				(void)val;
+				iterator it = begin();
+				while (it->first < val.first)
+					it++;
+				if (it->first == val.first)//element found insert not done
+					return (pair<iterator, bool>(it, false));
+				_size++;
+				Node<Key, T> newNode(val);
+				newNode._next = it._ptr;
+				newNode._prev = it._ptr->_prev;
+				it._ptr->_prev->_next = &newNode;
+				it._ptr->_prev = &newNode;
+				return (pair<iterator, bool>(iterator(&newNode), true));
 			};
 /*
 with hint (2)	

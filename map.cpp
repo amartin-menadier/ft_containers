@@ -19,10 +19,12 @@ bool isBiggerByTwo(int first, int next){return (first == next + 2);}
 bool isSmaller(int first, int second){return (first < second);}
 
 template <class map>
-void testmap(map &map1,map &map2,map &map3)
+void testmap(map &map0, map &map1,map &map2,map &map3)
 {
 	COUT("empty constructor (1):", "", "\n");
-	(void) map1; (void)map2; (void)map3;
+	display(map0);
+	display(map1);
+	(void) map0; (void)map2; (void)map3;
 //	display(map1);
 /*	COUT("range constructor (2):", "", "\n");
 	display(map2);
@@ -82,31 +84,32 @@ int main(int argc, char **argv)
 	stdmap1.insert(std::pair<std::string, int> ("ABC", 2));
 	stdmap1.insert(std::pair<std::string, int> ("DEF", 52));
 	stdmap1.insert(std::pair<std::string, int> ("GHI", 43));
+	stdmap1.insert(std::pair<std::string, int> ("GHI", 13));
 	stdmap1.insert(std::pair<std::string, int> ("JKL", 2856));
 	stdmap1.insert(std::pair<std::string, int> ("MNO", 12));
 	stdmap1.insert(std::pair<std::string, int> ("PQR", 0));
 	stdmap1.insert(std::pair<std::string, int> ("STU", 42));
 	std::map<std::string, int> stdmap2(++stdmap1.begin(), --stdmap1.end());//range constructor(2/3)
 	std::map<std::string, int> stdmap3(stdmap2);//copy constructor (3/3)
-	testmap(stdmap, stdmap2, stdmap3);
+	testmap(stdmap, stdmap1, stdmap2, stdmap3);
 	}
 
 	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
 	{
 	if (argc == 1)
 		std::cout << "-----------------------------------\n\nFT MAP"<<std::endl;
-	ft::map<std::string, int> stdmap;	//empty constructor (1/3)
-	ft::map<std::string, int> stdmap1;
-//	stdmap1.insert(ft::pair<std::string, int> ("ABC", 2));
-/*	stdmap1.insert(ft::pair<std::string, int> ("DEF", 52));
-	stdmap1.insert(ft::pair<std::string, int> ("GHI", 43));
-	stdmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
-	stdmap1.insert(ft::pair<std::string, int> ("MNO", 12));
-	stdmap1.insert(ft::pair<std::string, int> ("PQR", 0));
-	stdmap1.insert(ft::pair<std::string, int> ("STU", 42));
-	ft::map<std::string, int> stdmap2(++stdmap1.begin(), --stdmap1.end());//range constructor(2/3)
-	ft::map<std::string, int> stdmap3(stdmap2);//copy constructor (3/3)
-*/	testmap(stdmap, stdmap, stdmap);
+	ft::map<std::string, int> ftmap;	//empty constructor (1/3)
+	ft::map<std::string, int> ftmap1;
+/*	ftmap1.insert(ft::pair<std::string, int> ("ABC", 2));
+	ftmap1.insert(ft::pair<std::string, int> ("DEF", 52));
+	ftmap1.insert(ft::pair<std::string, int> ("GHI", 43));
+	ftmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
+	ftmap1.insert(ft::pair<std::string, int> ("MNO", 12));
+	ftmap1.insert(ft::pair<std::string, int> ("PQR", 0));
+	ftmap1.insert(ft::pair<std::string, int> ("STU", 42));
+	ft::map<std::string, int> ftmap2(++ftmap1.begin(), --ftmap1.end());//range constructor(2/3)
+	ft::map<std::string, int> ftmap3(ftmap2);//copy constructor (3/3)
+*/	testmap(ftmap, ftmap1, ftmap, ftmap);
 	}
 	return (0);
 }
