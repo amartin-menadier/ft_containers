@@ -12,6 +12,7 @@ namespace ft
 	template <class Key, class T>
 	struct pair{
 		pair(Key first, T second): first(first), second(second){};
+		pair():first(), second(){};
 		Key		first;
 		T		second;
 	};
@@ -19,9 +20,11 @@ namespace ft
 	template <class Key, class T>
 	struct Node{
 		Node(pair<Key, T> pair): _pair(pair), _prev(NULL), _next(NULL){};
+		Node(): _pair(), _prev(NULL), _next(NULL){};
 		pair<Key, T>	_pair;
 		Node<Key, T>	*_prev;
-		Node<Key, T>	*_next;		
+		Node<Key, T>	*_next;	
+		char			_padding[9];//just there to get the same maxsize output
 	};
 
 	template <class Key, class T, class Compare = less<Key> >
@@ -41,39 +44,30 @@ namespace ft
 				public:
 				iterator():_ptr(NULL){};
 				iterator(const iterator & src){_ptr = src._ptr;};
-				iterator(Node<Key, T> *ptr){_ptr = ptr; setValues();};
-				bool operator==(const iterator &other) const {return _ptr == other._ptr;};
-				bool operator!=(const iterator &other) const {return _ptr != other._ptr;};
+				iterator(Node<Key, T> *ptr){_ptr = ptr;};
+				bool operator==(const iterator &other) const{return _ptr==other._ptr;};
+				bool operator!=(const iterator &other) const{return _ptr!=other._ptr;};
 				iterator &operator++(){
 					_ptr = _ptr->_next;
-					setValues();
 					return *this;};//++it
 				iterator &operator--() {
 					_ptr=_ptr->_prev;
-					setValues();
 					return *this;};//--it
 				iterator operator++(int) {
 					iterator it(this->_ptr);
 					this->_ptr = this->_ptr->_next;
-					setValues();
 					return it;}; // it++
 				iterator operator--(int) {
 					iterator it(this->_ptr);
 					this->_ptr = this->_ptr->_prev;
-					setValues();
 					return it;}; // it--
-		//		iterator &operator*(){return this->_ptr;};
-		//		iterator *operator->(){return &this->operator*());};
-				pair<Key, T> *operator->(){return &(_ptr->_pair);};
-
-				Node<Key, T> * getPtr() const{return _ptr;};
-				void	setValues(){
-					first = &_ptr->_pair.first;
-					second = &_ptr->_pair.second;};
-	
-
-				Key *first;
-				T	*second;
+				pair<Key, T> &operator*(){return _ptr->_pair;};
+				pair<Key, T> *operator->(){
+					if(_ptr)
+						return &(_ptr->_pair);
+					else
+						return (NULL);};
+				Node<Key, T>	*getPtr() const{return _ptr;};
 				Node<Key, T>	*_ptr;
 			};
 	/*		class const_iterator
@@ -133,85 +127,60 @@ namespace ft
 //CONSTRUCTORS
 			//default constructor(1)
 			explicit map (const key_compare& comp = key_compare())
-				: _map(NULL), _comp(comp), _size(0){};
-/*			//fill constructor(2)
-			explicit map(size_type n, const value_type& val = value_type())
-				: _size(n), _capacity(n){
-				_map = new T[_capacity];
-				for (size_type i = 0; i < n; i++){_map[i] = val;}
-			};
-			//range constructor(3)
-			map(iterator first, iterator last)
-				: _size(0)
+				: _comp(comp), _size(0){
+					_map = new Node<Key, T>();
+					_map->_prev = _map;
+					_map->_next = _map;
+				};
+			//range constructor(2)
+			map(iterator first, iterator last, const key_compare& comp = key_compare())
+				: _comp(comp), _size(0)
 			{
-				while (first != last)
-				{
-					push_back(*first);
-					first++;
-				}
+				_map = new Node<Key, T>();
+				_map->_prev = _map;
+				_map->_next = _map;
+		//		std::cout << "copy constructor" << std::endl;
+				insert(first, last);
+		//		std::cout << "copy constructor2" << std::endl;
+				//first++;
 			};
-			//copy constructor(4)
-			map(const map& x): _size(x.size()), _capacity(x.capacity())
+			//copy constructor(3)
+			map(const map& x): _comp(x._comp), _size(0)
 			{
-				_map = new T[x.capacity()];
-				for (size_t i = 0; i < x.size(); i++)
-					_map[i] = x._map[i];
+				_map = new Node<Key, T>();
+				_map->_prev = _map;
+				_map->_next = _map;
+				insert(iterator(x._map->_next), iterator(x._map));
 			};
 
 			map& operator= (const map& x)
 			{
 				clear();
-				_size = x._size;
-				_capacity = x._size;
-				if (_map)
-					delete _map;
-				_map = new T[_capacity];
-				for (size_t i = 0; i < x.size(); i++)
-					_map[i] = x._map[i];				
-				return *this;
+				_comp = x._comp;
+				insert(iterator(x._map->_next), iterator(x._map));
 			};
 			//Destructor
 			~map(){delete _map;};
-*/
+
 //ITERATORS
-			iterator begin(){return iterator(_map);}
+			iterator begin(){return iterator(_map->_next);};
 		/*	const_iterator begin() const{return const_iterator(_map);};
-		*/	iterator end(){return iterator(_map + _size);}
+		*/	iterator end(){return iterator(_map);};
 		/*	const_iterator end() const{return const_iterator(_map+_size);};
 			reverse_iterator rbegin(){return reverse_iterator(_map+_size-1);};
 			const_reverse_iterator rbegin() const{return const_reverse_iterator(_map+_size-1);};
 			reverse_iterator rend(){return reverse_iterator(_map-1);};
 			const_reverse_iterator rend() const{return const_reverse_iterator(_map-1);};
+*/
 //CAPACITY
+
 			size_type size() const{return _size;};
-			size_type max_size() const
-			{
+			size_type max_size() const{
 				//size_type is always positive so -1 is the max
-				return static_cast<size_type>(-1/sizeof(T));
+				return static_cast<size_type>(-1/sizeof(Node<Key, T>));
 			};
-			void resize (size_type n, value_type val = value_type())
-			{
-				while (n > _size)
-					push_back(val);
-				while (n < _size)
-					pop_back();
-			};
-			void clear(){resize(0);}
-			size_type capacity() const{return _capacity;};
 			bool empty() const{return !_size;};
-			void reserve(size_type n){
-				if (n <= _capacity)
-					return;
-				else
-				{
-					_capacity = n;
-					map copy(*this);
-					delete _map;
-					_map = new T[n];
-					for (size_type i=0; i < n; i++)
-						_map[i] = copy[i];
-				}
-			};
+/*		
 //ELEMENT ACCESS
 		    reference operator[] (size_type n){return *(_map + n);};
 			const_reference operator[] (size_type n) const{return *(_map + n);};
@@ -242,69 +211,56 @@ namespace ft
 			};
 			void	push_back(const T& val){insert(end(), val);};
 			void	pop_back(){erase(--end());};
-*/			//single element (1)	
+*/			
+			//insert: single element (1)	
 			pair<iterator,bool> insert (const value_type& val)
 			{
+		//		std::cout << "insert 1 1" << std::endl;
 				iterator it = begin();
-				while (it->first < val.first)
+		//		std::cout << "insert 1 2" << std::endl;
+				while (it != end() && _comp(it->first, val.first))
 					it++;
-				if (it->first == val.first)//element found insert not done
+		//		std::cout << "insert 1 3" << std::endl;
+				if (it != end() && it->first == val.first)//element found insert not done
 					return (pair<iterator, bool>(it, false));
+		//		std::cout << "insert 1 4" << std::endl;
 				_size++;
-				Node<Key, T> newNode(val);
-				newNode._next = it._ptr;
-				newNode._prev = it._ptr->_prev;
-				it._ptr->_prev->_next = &newNode;
-				it._ptr->_prev = &newNode;
-				return (pair<iterator, bool>(iterator(&newNode), true));
+				Node<Key, T> *newNode = new Node<Key, T>(val);
+		//		std::cout << "insert 1 5" << std::endl;
+				newNode->_next = it._ptr;
+				newNode->_prev = it._ptr->_prev;
+				it._ptr->_prev->_next = newNode;
+				it._ptr->_prev = newNode;
+		//		std::cout << "insert 1 6" << std::endl;
+				return (pair<iterator, bool>(iterator(newNode), true));
 			};
 /*
 with hint (2)	
 iterator insert (iterator position, const value_type& val);
-range (3)	
-template <class InputIterator>
-  void insert (InputIterator first, InputIterator last);
-
-			//insert: single element (1)	
-			iterator insert (iterator position, const value_type& val)
+*/			//insert: range (3)
+			void insert (iterator first, iterator last)
 			{
-				size_type i = 0;
-				map copy(*this);
-				for (iterator it = begin(); it != position; it++)
-					i++;
-				if (_size + 1 > _capacity)
-				{
-					if (!_capacity)
-						_capacity = 1;
-					while (_size + 1 > _capacity)
-						_capacity *= 2;
-					delete [] _map;
-					_map = new T[_capacity];
-				}
-				size_type j = 0;
-				for (; j != i; j++)
-					_map[j] = copy[j];
-				_map[i] = val;
-				for (; j != _size; j++)
-					_map[j + 1] = copy[j];	
-				_size++;			
-				return iterator(&_map[i]);
-			};
-			//insert: fill (2)	
-   			void insert (iterator position, size_type n, const value_type& val)
-			{
-				for (size_type i = 0; i<n; i++) 
-					insert(position, val);
-			};
-			//insert: range (3)	
-    		void insert (iterator position, iterator first, iterator last)
-			{
+//				std::cout << "insert range" << std::endl;
+				pair<Key, T> pairToInsert;
 				while (first != last)
 				{
-					insert(position++, *first);
+					pairToInsert = pair<Key, T>(first->first, first->second);
+//					std::cout << first->first << std::endl;
+//					std::cout << pairToInsert.first << " : " << pairToInsert.second << '\n';
+					insert(pairToInsert);
 					first++;
 				}
 			};
+			//erase(1)	
+/*     void erase (iterator position);
+(2)	
+size_type erase (const key_type& k);
+(3)	
+     void erase (iterator first, iterator last);
+*/
+/*			
+
+
 			iterator erase (iterator position)
 			{
 				iterator next;
@@ -330,6 +286,19 @@ template <class InputIterator>
 				std::swap(_map, x._map);
 			};
 */
+			void clear(){
+				Node<Key, T> *toErase = _map->_next;
+				Node<Key, T> *next;
+				while (toErase != _map)
+				{
+					next = toErase->_next;
+					delete toErase;
+					_size--;
+					toErase = next;
+				}
+				_map->_next = _map;
+				_map->_prev = _map;
+			}
 		private:
 			Node<Key, T>	*_map;
 			key_compare		_comp;

@@ -24,28 +24,26 @@ void testmap(map &map0, map &map1,map &map2,map &map3)
 	COUT("empty constructor (1):", "", "\n");
 	display(map0);
 	display(map1);
-	(void) map0; (void)map2; (void)map3;
-//	display(map1);
-/*	COUT("range constructor (2):", "", "\n");
+	(void)map3;
+	COUT("range constructor (2):", "", "\n");
 	display(map2);
 	COUT("copy constructor (3):", "", "\n");
 	display(map3);
 	COUT("Is map1 empty?", (map1.empty()? "yes":"no"), "\n");
 	display(map1);
 
-	for(typename map::reverse_iterator Rit = map2.rbegin(); Rit != map2.rend(); Rit++)
+/*	for(typename map::reverse_iterator Rit = map2.rbegin(); Rit != map2.rend(); Rit++)
 		std::cout << Rit->first << " => " << Rit->second << std::endl;
 	map2.erase(++map2.begin());
 	display(map2);
-	map1.insert(++(++map1.begin()), 9);
-	map1.insert(map1.begin(), 3, 7);		
-	display(map1);
-	COUT("Is map1 empty?", (map1.empty()? "yes":"no"), "");
-	COUT("\nIts size is", map1.size(), "and it can contain up to ");
-	COUT(map1.max_size(), "elements\nIts first element is", map1.front());
-	COUT(" and its last one is", map1.back(), "\n");
+
+*/	
 	display(map2);
- 	map1.swap(map2);
+	COUT("Is map1 empty?", (map2.empty()? "yes":"no"), "");
+	COUT("\nIts size is", map2.size(), "and it can contain up to ");
+	COUT(map2.max_size(), "","");
+	display(map2);
+/*	map1.swap(map2);
 	display(map2);
 	map1.insert(map1.begin(), ++(++(++(map2.begin()))), --map2.end());
 	display(map1);
@@ -68,9 +66,9 @@ void testmap(map &map0, map &map1,map &map2,map &map3)
 	swap(map1, map4);
 	display(map1);
 	display(map4);
-	map1.clear();
+*/	map1.clear();
 	COUT("Is map1 empty after clear?", (map1.empty()? "yes":"no"), "");
-*/	std::cout << std::endl;
+	std::cout << std::endl;
 }
 
 int main(int argc, char **argv)
@@ -100,16 +98,16 @@ int main(int argc, char **argv)
 		std::cout << "-----------------------------------\n\nFT MAP"<<std::endl;
 	ft::map<std::string, int> ftmap;	//empty constructor (1/3)
 	ft::map<std::string, int> ftmap1;
-/*	ftmap1.insert(ft::pair<std::string, int> ("ABC", 2));
+	ftmap1.insert(ft::pair<std::string, int> ("ABC", 2));
 	ftmap1.insert(ft::pair<std::string, int> ("DEF", 52));
 	ftmap1.insert(ft::pair<std::string, int> ("GHI", 43));
-	ftmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
 	ftmap1.insert(ft::pair<std::string, int> ("MNO", 12));
+	ftmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
 	ftmap1.insert(ft::pair<std::string, int> ("PQR", 0));
 	ftmap1.insert(ft::pair<std::string, int> ("STU", 42));
 	ft::map<std::string, int> ftmap2(++ftmap1.begin(), --ftmap1.end());//range constructor(2/3)
 	ft::map<std::string, int> ftmap3(ftmap2);//copy constructor (3/3)
-*/	testmap(ftmap, ftmap1, ftmap, ftmap);
+	testmap(ftmap, ftmap1, ftmap2, ftmap3);
 	}
 	return (0);
 }
