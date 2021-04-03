@@ -5,10 +5,10 @@
 template <class map>
 void display(map &toprint)
 {
-	std::cout << ">" << std::endl;
+	std::cout << "<start>\n";
 	for (typename map::iterator it=toprint.begin(); it!=toprint.end(); it++)
-		std::cout << it->first << " => " << it->second << std::endl;
-	std::cout << "<" << std::endl;
+		std::cout<<'('<<it->first << "; " << it->second << ");\n";
+	std::cout << "<end>" << std::endl;
 }
 
 //Predicate ≃ bool function
@@ -29,20 +29,20 @@ void testmap(map &map0, map &map1,map &map2,map &map3)
 	display(map2);
 	COUT("copy constructor (3):", "", "\n");
 	display(map3);
-	COUT("Is map1 empty?", (map1.empty()? "yes":"no"), "\n");
-	display(map1);
-
-/*	for(typename map::reverse_iterator Rit = map2.rbegin(); Rit != map2.rend(); Rit++)
-		std::cout << Rit->first << " => " << Rit->second << std::endl;
-	map2.erase(++map2.begin());
-	display(map2);
-
-*/	
-	display(map2);
-	COUT("Is map1 empty?", (map2.empty()? "yes":"no"), "");
+	COUT("Is map0 empty?", (map0.empty()? "yes":"no"), "\n");
+	COUT("Is map2 empty?", (map2.empty()? "yes":"no"), "");
 	COUT("\nIts size is", map2.size(), "and it can contain up to ");
-	COUT(map2.max_size(), "","");
+	COUT(map2.max_size(), "elements\n","");
+	std::cout << map2["DEF"] << '\n';
+	std::cout << map2["ZYX"] << '\n';
 	display(map2);
+	for(typename map::reverse_iterator Rit = map2.rbegin(); Rit != map2.rend(); Rit++)
+		std::cout << Rit->first << " => " << Rit->second << std::endl;
+//	map2.erase(++map2.begin());
+	display(map2);
+
+
+
 /*	map1.swap(map2);
 	display(map2);
 	map1.insert(map1.begin(), ++(++(++(map2.begin()))), --map2.end());

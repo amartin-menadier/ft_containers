@@ -13,8 +13,8 @@ namespace ft
 	struct pair{
 		pair(Key first, T second): first(first), second(second){};
 		pair():first(), second(){};
-		Key		first;
-		T		second;
+		const Key	first;
+		T			second;
 	};
 
 	template <class Key, class T>
@@ -36,7 +36,6 @@ namespace ft
 			typedef ft::pair<key_type, mapped_type> value_type;
 			typedef Compare key_compare;
 			typedef size_t size_type;
-
 
 //ITERATORS
 			class iterator
@@ -61,69 +60,109 @@ namespace ft
 					iterator it(this->_ptr);
 					this->_ptr = this->_ptr->_prev;
 					return it;}; // it--
-				pair<Key, T> &operator*(){return _ptr->_pair;};
 				pair<Key, T> *operator->(){
 					if(_ptr)
 						return &(_ptr->_pair);
 					else
 						return (NULL);};
-				Node<Key, T>	*getPtr() const{return _ptr;};
+				Node<Key, T> *getPtr() const{return _ptr;};
+				private:
 				Node<Key, T>	*_ptr;
 			};
-	/*		class const_iterator
+			class const_iterator
 			{
 				public:
 				const_iterator():_ptr(NULL){};
-				const_iterator(const const_iterator &src){_ptr = src._ptr;};
-				const_iterator(T *ptr){_ptr = ptr;};
-				bool operator==(const const_iterator &other) const {return _ptr == other._ptr;};
-				bool operator!=(const const_iterator &other) const {return _ptr != other._ptr;};
-				const_iterator &operator++() {_ptr++; return *this;};//++it
-				const_iterator &operator--() {_ptr--; return *this;};//--it
-				const_iterator operator++(int) {const_iterator it(this->_ptr); this->_ptr++; return it;}; // it++
-				const_iterator operator--(int) {const_iterator it(this->_ptr); this->_ptr--; return it;}; // it--			
-				T &operator*() const{return *_ptr;};//dereferencing
-				T *getPtr() const{return _ptr;};
+				const_iterator(const const_iterator & src){_ptr = src._ptr;};
+				const_iterator(Node<Key, T> *ptr){_ptr = ptr;};
+				bool operator==(const const_iterator&other)const{return _ptr==other._ptr;};
+				bool operator!=(const const_iterator&other)const{return _ptr!=other._ptr;};
+				const_iterator &operator++(){
+					_ptr = _ptr->_next;
+					return *this;};//++it
+				const_iterator &operator--() {
+					_ptr=_ptr->_prev;
+					return *this;};//--it
+				const_iterator operator++(int) {
+					const_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_next;
+					return it;}; // it++
+				const_iterator operator--(int) {
+					const_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_prev;
+					return it;}; // it--
+				pair<Key, T> *operator->(){
+					if(_ptr)
+						return &(_ptr->_pair);
+					else
+						return (NULL);};
+				Node<Key, T> *getPtr() const{return _ptr;};
 				private:
-					T	*_ptr;
+				Node<Key, T>	*_ptr;
 			};
 			class reverse_iterator
 			{
 				public:
 				reverse_iterator():_ptr(NULL){};
-				reverse_iterator(const reverse_iterator &src){_ptr = src._ptr;};
-				reverse_iterator(T *ptr){_ptr = ptr;};
-				bool operator==(const reverse_iterator &other) const {return _ptr == other._ptr;};
-				bool operator!=(const reverse_iterator &other) const {return _ptr != other._ptr;};
-				reverse_iterator &operator++() {_ptr--; return *this;};//++it
-				reverse_iterator &operator--() {_ptr++; return *this;};//--it
-				reverse_iterator operator++(int) {reverse_iterator it(this->_ptr); _ptr--; return it;};//it++
-				reverse_iterator operator--(int) {reverse_iterator it(this->_ptr); _ptr++; return it;};//it--
-				T	&operator*(){return *_ptr;};//dereferencing
-
-				T * getPtr() const{return _ptr;};
+				reverse_iterator(const reverse_iterator & src){_ptr = src._ptr;};
+				reverse_iterator(Node<Key, T> *ptr){_ptr = ptr;};
+				bool operator==(const reverse_iterator &other) const{return _ptr==other._ptr;};
+				bool operator!=(const reverse_iterator &other) const{return _ptr!=other._ptr;};
+				reverse_iterator &operator++(){
+					_ptr = _ptr->_prev;
+					return *this;};//++it
+				reverse_iterator &operator--() {
+					_ptr=_ptr->_next;
+					return *this;};//--it
+				reverse_iterator operator++(int) {
+					reverse_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_prev;
+					return it;}; // it++
+				reverse_iterator operator--(int) {
+					reverse_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_next;
+					return it;}; // it--
+				pair<Key, T> *operator->(){
+					if(_ptr)
+						return &(_ptr->_pair);
+					else
+						return (NULL);};
+				Node<Key, T> *getPtr() const{return _ptr;};
 				private:
-					T	*_ptr;
+				Node<Key, T>	*_ptr;
 			};
 			class const_reverse_iterator
 			{
 				public:
 				const_reverse_iterator():_ptr(NULL){};
-				const_reverse_iterator(const const_reverse_iterator &src){_ptr = src._ptr;};
-				const_reverse_iterator(T *ptr){_ptr = ptr;};
-				bool operator==(const const_reverse_iterator &other) const {return _ptr == other._ptr;};
-				bool operator!=(const const_reverse_iterator &other) const {return _ptr != other._ptr;};
-				const_reverse_iterator &operator++(){_ptr--; return *this;};//++it
-				const_reverse_iterator &operator--(){_ptr++; return *this;};//--it
-				const_reverse_iterator operator++(int){const_reverse_iterator it(this->_ptr); _ptr--; return it;};//it++
-				const_reverse_iterator operator--(int){const_reverse_iterator it(this->_ptr); _ptr++; return it;};//it--
-				T	&operator*() const{return *_ptr;};//dereferencing
-
-				T * getPtr() const{return _ptr;};
+				const_reverse_iterator(const const_reverse_iterator & src){_ptr = src._ptr;};
+				const_reverse_iterator(Node<Key, T> *ptr){_ptr = ptr;};
+				bool operator==(const const_reverse_iterator &other) const{return _ptr==other._ptr;};
+				bool operator!=(const const_reverse_iterator &other) const{return _ptr!=other._ptr;};
+				const_reverse_iterator &operator++(){
+					_ptr = _ptr->_prev;
+					return *this;};//++it
+				const_reverse_iterator &operator--() {
+					_ptr=_ptr->_next;
+					return *this;};//--it
+				const_reverse_iterator operator++(int) {
+					const_reverse_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_prev;
+					return it;}; // it++
+				const_reverse_iterator operator--(int) {
+					const_reverse_iterator it(this->_ptr);
+					this->_ptr = this->_ptr->_next;
+					return it;}; // it--
+				pair<Key, T> *operator->(){
+					if(_ptr)
+						return &(_ptr->_pair);
+					else
+						return (NULL);};
+				Node<Key, T> *getPtr() const{return _ptr;};
 				private:
-					T	*_ptr;
-			};
-*/
+				Node<Key, T>	*_ptr;
+			};		
+	
 //CONSTRUCTORS
 			//default constructor(1)
 			explicit map (const key_compare& comp = key_compare())
@@ -139,10 +178,7 @@ namespace ft
 				_map = new Node<Key, T>();
 				_map->_prev = _map;
 				_map->_next = _map;
-		//		std::cout << "copy constructor" << std::endl;
 				insert(first, last);
-		//		std::cout << "copy constructor2" << std::endl;
-				//first++;
 			};
 			//copy constructor(3)
 			map(const map& x): _comp(x._comp), _size(0)
@@ -159,38 +195,40 @@ namespace ft
 				_comp = x._comp;
 				insert(iterator(x._map->_next), iterator(x._map));
 			};
+
 			//Destructor
 			~map(){delete _map;};
 
 //ITERATORS
 			iterator begin(){return iterator(_map->_next);};
-		/*	const_iterator begin() const{return const_iterator(_map);};
-		*/	iterator end(){return iterator(_map);};
-		/*	const_iterator end() const{return const_iterator(_map+_size);};
-			reverse_iterator rbegin(){return reverse_iterator(_map+_size-1);};
-			const_reverse_iterator rbegin() const{return const_reverse_iterator(_map+_size-1);};
-			reverse_iterator rend(){return reverse_iterator(_map-1);};
-			const_reverse_iterator rend() const{return const_reverse_iterator(_map-1);};
-*/
-//CAPACITY
+			const_iterator begin() const{return const_iterator(_map->_next);};
+			iterator end(){return iterator(_map);};
+			const_iterator end() const{return const_iterator(_map);};
+			reverse_iterator rbegin(){return reverse_iterator(_map->_prev);};
+			const_reverse_iterator rbegin() const{return const_reverse_iterator(_map->_prev);};
+			reverse_iterator rend(){return reverse_iterator(_map);};
+			const_reverse_iterator rend() const{return const_reverse_iterator(_map);};
 
+//CAPACITY
+			bool empty() const{return !_size;};
 			size_type size() const{return _size;};
 			size_type max_size() const{
 				//size_type is always positive so -1 is the max
 				return static_cast<size_type>(-1/sizeof(Node<Key, T>));
 			};
-			bool empty() const{return !_size;};
-/*		
-//ELEMENT ACCESS
-		    reference operator[] (size_type n){return *(_map + n);};
-			const_reference operator[] (size_type n) const{return *(_map + n);};
-			reference at (size_type n){return (*this)[n];};
-			const_reference at (size_type n) const{return (*this)[n];};
-			reference front(){return (*begin());};
-			const_reference front() const {return (*begin());};
-			reference back(){return *(_map + _size - 1);};
-			const_reference back() const{return *(_map + _size - 1);};
 
+//ELEMENT ACCESS
+			mapped_type& operator[] (const key_type& k){
+				iterator it = begin();
+				while (it != end() && _comp(it->first, k))
+					it++;
+				if (it != end() && it->first == k)//element found
+					return (it->second);
+				else//element not found
+					insert(pair<Key, T>(k, T()));
+				return ((*this)[k]);
+			};
+/*
 //MODIFIERS
 			//assign: range (1)	
 			void assign (iterator first, iterator last)
@@ -215,41 +253,29 @@ namespace ft
 			//insert: single element (1)	
 			pair<iterator,bool> insert (const value_type& val)
 			{
-		//		std::cout << "insert 1 1" << std::endl;
 				iterator it = begin();
-		//		std::cout << "insert 1 2" << std::endl;
 				while (it != end() && _comp(it->first, val.first))
 					it++;
-		//		std::cout << "insert 1 3" << std::endl;
 				if (it != end() && it->first == val.first)//element found insert not done
 					return (pair<iterator, bool>(it, false));
-		//		std::cout << "insert 1 4" << std::endl;
-				_size++;
-				Node<Key, T> *newNode = new Node<Key, T>(val);
-		//		std::cout << "insert 1 5" << std::endl;
-				newNode->_next = it._ptr;
-				newNode->_prev = it._ptr->_prev;
-				it._ptr->_prev->_next = newNode;
-				it._ptr->_prev = newNode;
-		//		std::cout << "insert 1 6" << std::endl;
-				return (pair<iterator, bool>(iterator(newNode), true));
+				else
+				{
+					_size++;
+					Node<Key, T> *newNode = new Node<Key, T>(val);
+					newNode->_next = it.getPtr();
+					newNode->_prev = it.getPtr()->_prev;
+					it.getPtr()->_prev->_next = newNode;
+					it.getPtr()->_prev = newNode;
+					return (pair<iterator, bool>(iterator(newNode), true));
+				}
 			};
 /*
 with hint (2)	
 iterator insert (iterator position, const value_type& val);
 */			//insert: range (3)
-			void insert (iterator first, iterator last)
-			{
-//				std::cout << "insert range" << std::endl;
-				pair<Key, T> pairToInsert;
-				while (first != last)
-				{
-					pairToInsert = pair<Key, T>(first->first, first->second);
-//					std::cout << first->first << std::endl;
-//					std::cout << pairToInsert.first << " : " << pairToInsert.second << '\n';
-					insert(pairToInsert);
-					first++;
-				}
+			void insert (iterator first, iterator last){
+				for (;first!=last; first++)
+					insert(pair<Key, T>(first->first, first->second));
 			};
 			//erase(1)	
 /*     void erase (iterator position);
