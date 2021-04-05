@@ -13,6 +13,7 @@ namespace ft
 	struct pair{
 		pair(Key first, T second): first(first), second(second){};
 		pair():first(), second(){};
+
 		const Key	first;
 		T			second;
 	};
@@ -60,6 +61,12 @@ namespace ft
 					iterator it(this->_ptr);
 					this->_ptr = this->_ptr->_prev;
 					return it;}; // it--
+				pair<Key, T> operator*(){
+					if(_ptr)
+						return (_ptr->_pair);
+					else
+						return (pair<Key, T>());
+				};
 				pair<Key, T> *operator->(){
 					if(_ptr)
 						return &(_ptr->_pair);
@@ -163,17 +170,31 @@ namespace ft
 				Node<Key, T>	*_ptr;
 			};		
 	
+//CLASS VALUE_COMPARE
+			class value_compare
+			{
+				public:
+					value_compare(const key_compare& compare) : _comp(compare)
+					{}
+
+					bool operator() (const value_type& a, const value_type& b) const
+					{
+						return _comp(a.first, b.first);
+					}
+				private:
+					key_compare _comp;
+			};
 //CONSTRUCTORS
 			//default constructor(1)
 			explicit map (const key_compare& comp = key_compare())
-				: _comp(comp), _size(0){
+				: _keycomp(comp), _size(0){
 					_map = new Node<Key, T>();
 					_map->_prev = _map;
 					_map->_next = _map;
 				};
 			//range constructor(2)
 			map(iterator first, iterator last, const key_compare& comp = key_compare())
-				: _comp(comp), _size(0)
+				: _keycomp(comp), _size(0)
 			{
 				_map = new Node<Key, T>();
 				_map->_prev = _map;
@@ -181,7 +202,7 @@ namespace ft
 				insert(first, last);
 			};
 			//copy constructor(3)
-			map(const map& x): _comp(x._comp), _size(0)
+			map(const map& x): _keycomp(x._keycomp), _size(0)
 			{
 				_map = new Node<Key, T>();
 				_map->_prev = _map;
@@ -192,7 +213,7 @@ namespace ft
 			map& operator= (const map& x)
 			{
 				clear();
-				_comp = x._comp;
+				_keycomp = x._keycomp;
 				insert(iterator(x._map->_next), iterator(x._map));
 			};
 
@@ -220,7 +241,7 @@ namespace ft
 //ELEMENT ACCESS
 			mapped_type& operator[] (const key_type& k){
 				iterator it = begin();
-				while (it != end() && _comp(it->first, k))
+				while (it != end() && _keycomp(it->first, k))
 					it++;
 				if (it != end() && it->first == k)//element found
 					return (it->second);
@@ -228,33 +249,13 @@ namespace ft
 					insert(pair<Key, T>(k, T()));
 				return ((*this)[k]);
 			};
-/*
+
 //MODIFIERS
-			//assign: range (1)	
-			void assign (iterator first, iterator last)
-			{
-				clear();
-				while (first != last)
-				{
-					push_back(*first);
-					first++;
-				}
-			};
-			//assign: fill (2)	
-			void assign (size_type n, const value_type& val)
-			{
-				clear();
-				for (size_type i = 0; i < n; i++)
-					push_back(val);
-			};
-			void	push_back(const T& val){insert(end(), val);};
-			void	pop_back(){erase(--end());};
-*/			
-			//insert: single element (1)	
+			//insert: single element(1)	
 			pair<iterator,bool> insert (const value_type& val)
 			{
 				iterator it = begin();
-				while (it != end() && _comp(it->first, val.first))
+				while (it != end() && _keycomp(it->first, val.first))
 					it++;
 				if (it != end() && it->first == val.first)//element found insert not done
 					return (pair<iterator, bool>(it, false));
@@ -269,149 +270,145 @@ namespace ft
 					return (pair<iterator, bool>(iterator(newNode), true));
 				}
 			};
-/*
-with hint (2)	
-iterator insert (iterator position, const value_type& val);
-*/			//insert: range (3)
+			//insert: with hint(2)	
+			iterator insert (iterator position, const value_type& val)
+			{
+				iterator it = iterator(position);
+				while(it!=end() && _keycomp(val.first, it->first))//case for position too high
+					it--;
+				while(it!=end() && _keycomp(it->first, val.first))//case for position too low
+					it++;
+				if (it != end() && it->first == val.first)//element found insert not done
+					return (it);
+				else
+				{
+					_size++;
+					Node<Key, T> *newNode = new Node<Key, T>(val);
+					newNode->_next = it.getPtr();
+					newNode->_prev = it.getPtr()->_prev;
+					it.getPtr()->_prev->_next = newNode;
+					it.getPtr()->_prev = newNode;
+					return (it);
+				}
+			};
+			//insert: range(3)
 			void insert (iterator first, iterator last){
 				for (;first!=last; first++)
 					insert(pair<Key, T>(first->first, first->second));
 			};
 			//erase(1)	
-/*     void erase (iterator position);
-(2)	
-size_type erase (const key_type& k);
-(3)	
-     void erase (iterator first, iterator last);
-*/
-/*			
-
-
-			iterator erase (iterator position)
+		    void erase (iterator position)
 			{
-				iterator next;
-				while(position != end())
+				iterator it = begin();
+				while (it != end() && it != position)
+					it++;
+				if (it == end())
+					return;
+				else
 				{
-					next = iterator(position.getPtr() + 1);
-					*position = *next;
-					position = next;
+					Node<Key, T> *prev = it.getPtr()->_prev;
+					Node<Key, T> *next = it.getPtr()->_next;
+					prev->_next = next;
+					next->_prev = prev;
+					delete (it.getPtr());
+					_size--;
 				}
-				_size--;
-				return position;
 			};
-			iterator erase (iterator first, iterator last)
+			//erase(2)	
+			size_type erase (const key_type& k)
 			{
-				iterator it = first;
-				while (it != last)
-					it = erase(it);//returns iterator after the one erased
-				return last;
+				iterator it = begin();
+				while (it != end() && it->first != k)
+					it++;
+				if (it == end())
+					return(0);
+				else if (it->first == k)
+					erase(it);
+				return(1);//nb of elements erased
+			};
+			//erase(3)	
+			void erase (iterator first, iterator last)
+			{
+				iterator it(first);
+				iterator next;
+				while (it != end() && it != last)
+				{
+					next = iterator(it.getPtr()->_next);
+					erase(it);
+					it = next;
+				}
 			};
 			void swap (map& x)
 			{
 				std::swap(_size, x._size);
 				std::swap(_map, x._map);
 			};
-*/
 			void clear(){
-				Node<Key, T> *toErase = _map->_next;
-				Node<Key, T> *next;
-				while (toErase != _map)
-				{
-					next = toErase->_next;
-					delete toErase;
-					_size--;
-					toErase = next;
-				}
-				_map->_next = _map;
-				_map->_prev = _map;
+				erase(begin(), end());
 			}
+
+//OBSERVERS
+			key_compare key_comp() const{
+				return (_keycomp);
+			};
+			value_compare value_comp() const{
+				return (value_compare(_keycomp));
+			};
+//OPERATIONS
+			iterator find (const key_type& k)
+			{
+				iterator it = begin();
+				while (it != end() && it->first != k)
+					it++;
+				return (it);
+			};
+			const_iterator find (const key_type& k) const{
+				const_iterator it = begin();
+				while (it != end() && it->first != k)
+					it++;
+				return (it);				
+			};
+			size_type count (const key_type& k) const{
+				if (find(k) == end())
+					return 0;
+				else
+					return 1;
+			};
+			iterator lower_bound (const key_type& k)
+			{
+				iterator it = begin();
+				while (it != end() && _keycomp(it->first, k))
+					it++;
+				return (it);
+			};
+			const_iterator lower_bound (const key_type& k) const{
+				const_iterator it = begin();
+				while (it != end() && _keycomp(it->first, k))
+					it++;
+				return (it);				
+			};
+			iterator upper_bound (const key_type& k){
+				iterator it = lower_bound(k);
+				if (it->first == k)
+					it++;
+				return it;
+			};
+			const_iterator upper_bound (const key_type& k) const{
+				const_iterator it = lower_bound(k);
+				if (it->first == k)
+					it++;
+				return it;
+			};
+			pair<const_iterator,const_iterator> equal_range (const key_type& k) const{
+				return(pair<const_iterator,const_iterator>(lower_bound(k),upper_bound(k)));
+			};
+			pair<iterator,iterator>             equal_range (const key_type& k){
+				return (pair<iterator, iterator>(lower_bound(k), upper_bound(k)));
+			};
 		private:
 			Node<Key, T>	*_map;
-			key_compare		_comp;
+			key_compare		_keycomp;
 			size_type		_size;
-
 	};
 };
-/*
-// RELATIONAL OPERATORS
-//==(1)	
-template <class T>
-bool operator== (const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	if (lhs.size() != rhs.size())
-		return false;
-	typename ft::map<T>::const_iterator itlhs = lhs.begin();
-	typename ft::map<T>::const_iterator itrhs = rhs.begin();
-	while (itlhs != lhs.end() && itrhs != rhs.end())
-	{
-		if (*itrhs != *itlhs)
-			return false;
-		itrhs++;
-		itlhs++;
-	}
-	if (itlhs == lhs.end() && itrhs == rhs.end())
-		return true;
-	else
-		return false;
-};
-//!=(2)	
-template <class T>
-bool operator!= (const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	if (lhs == rhs)
-		return false;
-	else
-		return true;
-};
-//<(3)	
-template <class T>
-bool operator<(const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	typename ft::map<T>::const_iterator itlhs = lhs.begin();
-	typename ft::map<T>::const_iterator itrhs = rhs.begin();
-	while (itlhs != lhs.end() && itrhs != rhs.end())
-	{
-		if (*itlhs < *itrhs)
-			return true;
-		if (*itlhs > *itrhs)
-			return false;
-		itrhs++;
-		itlhs++;
-	}
-	if (itlhs == lhs.end() && itrhs != rhs.end())
-		return true;
-	else
-		return false;
-};
-//<=(4)	
-template <class T>
-bool operator<= (const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	if (lhs < rhs || lhs == rhs)
-		return true;
-	else
-		return false;
-};
-//>(5)	
-template <class T>
-bool operator>(const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	if (!(lhs == rhs) && !(lhs < rhs))
-		return true;
-	else
-		return false;
-};
-//>=(6)	
-template <class T>
-bool operator>= (const ft::map<T>& lhs, const ft::map<T>& rhs)
-{
-	if (!(lhs < rhs))
-		return true;
-	else
-		return false;
-};
-
-template <class T>
-void swap (ft::map<T>& x, ft::map<T>& y){x.swap(y);};
-*/
 #endif /* ************************************************************* MAP_H */

@@ -18,8 +18,8 @@ bool isBiggerByTwo(int first, int next){return (first == next + 2);}
 //Compare ≃ Binary Predicate but comparing two args
 bool isSmaller(int first, int second){return (first < second);}
 
-template <class map>
-void testmap(map &map0, map &map1,map &map2,map &map3)
+template <class map, class pair>
+void testmap(map &map0, map &map1,map &map2,map &map3, pair pair0)
 {
 	COUT("empty constructor (1):", "", "\n");
 	display(map0);
@@ -38,9 +38,31 @@ void testmap(map &map0, map &map1,map &map2,map &map3)
 	display(map2);
 	for(typename map::reverse_iterator Rit = map2.rbegin(); Rit != map2.rend(); Rit++)
 		std::cout << Rit->first << " => " << Rit->second << std::endl;
-//	map2.erase(++map2.begin());
+	map3.insert(++(++(map3.begin())), pair0);//insert with hint (bad position(before))
+	display(map3);
+	map3.insert(--(map3.end()), pair0);//insert with hint (bad position(after))
+	display(map3);
+	map3.erase(++(map3.begin()));
+	display(map3);
+	map3.erase(++(map3.begin()), --(map3.end()));
+	display(map3);
+	map3.erase("PQR");//exists
+	display(map3);
+	map2.erase("NOPE");//does not exist
 	display(map2);
-
+	map3.swap(map2);
+	display(map3);
+	display(map2);
+	//example given in c++ reference for value_compare function
+	map0["x"]=1001;
+	map0["y"]=2002;
+	map0["z"]=3003;
+	std::cout << "map0 contains:\n";
+	typename map::iterator it = map0.begin();
+	do {
+		std::cout << it->first << " => " << it->second << '\n';
+	} while(map0.value_comp()(*it++, *(--(map0.end()))));
+	//end of the given example
 
 
 /*	map1.swap(map2);
@@ -89,7 +111,8 @@ int main(int argc, char **argv)
 	stdmap1.insert(std::pair<std::string, int> ("STU", 42));
 	std::map<std::string, int> stdmap2(++stdmap1.begin(), --stdmap1.end());//range constructor(2/3)
 	std::map<std::string, int> stdmap3(stdmap2);//copy constructor (3/3)
-	testmap(stdmap, stdmap1, stdmap2, stdmap3);
+	std::pair<std::string, int> stdpair("PAIR", 42);
+	testmap(stdmap, stdmap1, stdmap2, stdmap3, stdpair);
 	}
 
 	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
@@ -107,7 +130,8 @@ int main(int argc, char **argv)
 	ftmap1.insert(ft::pair<std::string, int> ("STU", 42));
 	ft::map<std::string, int> ftmap2(++ftmap1.begin(), --ftmap1.end());//range constructor(2/3)
 	ft::map<std::string, int> ftmap3(ftmap2);//copy constructor (3/3)
-	testmap(ftmap, ftmap1, ftmap2, ftmap3);
+	ft::pair<std::string, int> ftpair("PAIR", 42);
+	testmap(ftmap, ftmap1, ftmap2, ftmap3, ftpair);
 	}
 	return (0);
 }
