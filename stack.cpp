@@ -7,6 +7,7 @@
 template <class stack>
 void display_and_clear(stack &toprint)
 {
+	std::cout << '\n';
 	while(!toprint.empty())
 	{
 		std::cout << toprint.top() << '\n';
@@ -59,6 +60,5 @@ int main(int argc, char **argv)
 
 	teststack(first, second);
 	}
-
 	return (0);
 }

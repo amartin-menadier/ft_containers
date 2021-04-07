@@ -81,6 +81,18 @@ stack_compare:
 	@- diff std.txt ft.txt
 	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
+queue: 
+	@clang++ $(CFLAGS) queue.hpp containers.hpp queue.cpp 
+	@./a.out 
+	@rm a.out *.hpp.gch 1>/dev/null
+
+queue_compare:
+	@clang++ $(CFLAGS) queue.hpp containers.hpp queue.cpp 
+	@./a.out std 1>./std.txt
+	@./a.out ft 1>./ft.txt
+	@- diff std.txt ft.txt
+	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
+
 valgrind:
 	@make re
 	valgrind ./$(NAME)
