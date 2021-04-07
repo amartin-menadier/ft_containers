@@ -11,13 +11,6 @@ void display(map &toprint)
 	std::cout << "<end>" << std::endl;
 }
 
-//Predicate ≃ bool function
-bool biggerThanEight(const int &totest){return (totest > 8);}
-//Binary Predicate ≃ bool function with two args
-bool isBiggerByTwo(int first, int next){return (first == next + 2);}
-//Compare ≃ Binary Predicate but comparing two args
-bool isSmaller(int first, int second){return (first < second);}
-
 template <class map, class pair>
 void testmap(map &map0, map &map1,map &map2,map &map3, pair pair0)
 {
@@ -63,32 +56,7 @@ void testmap(map &map0, map &map1,map &map2,map &map3, pair pair0)
 		std::cout << it->first << " => " << it->second << '\n';
 	} while(map0.value_comp()(*it++, *(--(map0.end()))));
 	//end of the given example
-
-
-/*	map1.swap(map2);
-	display(map2);
-	map1.insert(map1.begin(), ++(++(++(map2.begin()))), --map2.end());
-	display(map1);
-	COUT("map1:", "", "");
-	display(map1);
-	COUT("map2:", "", "");
-	map2 = map1;
-	display(map2);
-	COUT("map3:", "", "");
-	display(map3);
-	COUT("map4:", "", "");
-	display(map4);
-	COUT("Is map1 equal to map2?",(map1 == map2? "yes":"no"),"\n");
-	COUT("Is map1 equal to map3?",(map1 == map3? "yes":"no"),"\n");
-	COUT("Then they are different?",(map1 != map3? "yes":"no"),"\n");
-	COUT("Is map1 smaller than map3?",(map1 < map3? "yes":"no"),"\n");
-	COUT("Is map1 smaller or equal to map2?",(map1<=map2?"yes":"no"),"\n");
-	COUT("Is map1 bigger than map4?",(map1 > map4? "yes":"no"),"\n");
-	COUT("Is map1 bigger or equal to map4?",(map1>=map4? "yes":"no"),"\n");
-	swap(map1, map4);
-	display(map1);
-	display(map4);
-*/	map1.clear();
+	map1.clear();
 	COUT("Is map1 empty after clear?", (map1.empty()? "yes":"no"), "");
 	std::cout << std::endl;
 }
