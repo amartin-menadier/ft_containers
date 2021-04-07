@@ -140,29 +140,34 @@ void testvector(vector &vector1,vector &vector2,vector &vector3,vector &vector4)
 	std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
+void vector_main(std::string nameSpace)
 {
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "std"))
+	if (nameSpace == "both" || nameSpace == "std")
 	{
-		if (argc == 1)
-	std::cout << "vector\nSTD VECTOR" << std::endl;
-	std::vector<int> stdvector;	//default constructor (1/4)
-	std::vector<int> stdvector2(5, 4);//fill constructor (2/4)
-	std::vector<int> stdvector3(++stdvector2.begin(), --stdvector2.end());//range constructor(3/4)
-	std::vector<int> stdvector4(stdvector2);//copy constructor (4/4)
-	testvector(stdvector, stdvector2, stdvector3, stdvector4);
+		if (nameSpace == "both")
+			std::cout << "\n\nVECTOR\nSTD VECTOR" << std::endl;
+		//default constructor (1/4)
+		std::vector<int> stdvector;
+		//fill constructor (2/4)
+		std::vector<int> stdvector2(5, 4);
+		//range constructor(3/4)
+		std::vector<int> stdvector3(++stdvector2.begin(), --stdvector2.end());
+		//copy constructor (4/4)
+		std::vector<int> stdvector4(stdvector2);
+		testvector(stdvector, stdvector2, stdvector3, stdvector4);
 	}
-
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
+	if (nameSpace == "both" || nameSpace == "ft")
 	{
-		if (argc == 1)
-	std::cout << "------------------------------------\n\nFT VECTOR"<<std::endl;
-	ft::vector<int> ftvector;	//default constructor (1/4)
-	ft::vector<int> ftvector2(5, 4);//fill constructor (2/4)
-	ft::vector<int> ftvector3(++ftvector2.begin(), --ftvector2.end());//range constructor(3/4)
-	ft::vector<int> ftvector4(ftvector2);//copy constructor (4/4)
-	testvector(ftvector, ftvector2, ftvector3, ftvector4);
+		if (nameSpace == "both")
+			std::cout << "--------------------\n\nFT VECTOR"<<std::endl;
+		//default constructor (1/4)
+		ft::vector<int> ftvector;	
+		//fill constructor (2/4)
+		ft::vector<int> ftvector2(5, 4);
+		//range constructor(3/4)
+		ft::vector<int> ftvector3(++ftvector2.begin(), --ftvector2.end());
+		//copy constructor (4/4)
+		ft::vector<int> ftvector4(ftvector2);
+		testvector(ftvector, ftvector2, ftvector3, ftvector4);
 	}
-
-	return (0);
 }

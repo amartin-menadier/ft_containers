@@ -528,7 +528,7 @@ bool operator<= (const ft::list<T,Alloc>& lhs, const ft::list<T,Alloc>& rhs)
 	if (lhs < rhs || lhs == rhs)
 		return true;
 	else
-		return false;
+		return false; 
 };
 //>(5)	
 template <class T, class Alloc>

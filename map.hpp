@@ -367,7 +367,7 @@ namespace ft
 				while (it != end() && it->first != k)
 					it++;
 				return (it);				
-			};
+			}; 
 			size_type count (const key_type& k) const{
 				if (find(k) == end())
 					return 0;

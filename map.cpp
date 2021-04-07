@@ -61,45 +61,51 @@ void testmap(map &map0, map &map1,map &map2,map &map3, pair pair0)
 	std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
-{
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "std"))
-	{
-	if (argc == 1)
-		std::cout << "MAP\nSTD MAP" << std::endl;
-	std::map<std::string, int> stdmap;	//empty constructor (1/3)
-	std::map<std::string, int> stdmap1;
-	stdmap1.insert(std::pair<std::string, int> ("ABC", 2));
-	stdmap1.insert(std::pair<std::string, int> ("DEF", 52));
-	stdmap1.insert(std::pair<std::string, int> ("GHI", 43));
-	stdmap1.insert(std::pair<std::string, int> ("GHI", 13));
-	stdmap1.insert(std::pair<std::string, int> ("JKL", 2856));
-	stdmap1.insert(std::pair<std::string, int> ("MNO", 12));
-	stdmap1.insert(std::pair<std::string, int> ("PQR", 0));
-	stdmap1.insert(std::pair<std::string, int> ("STU", 42));
-	std::map<std::string, int> stdmap2(++stdmap1.begin(), --stdmap1.end());//range constructor(2/3)
-	std::map<std::string, int> stdmap3(stdmap2);//copy constructor (3/3)
-	std::pair<std::string, int> stdpair("PAIR", 42);
-	testmap(stdmap, stdmap1, stdmap2, stdmap3, stdpair);
-	}
 
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
+void map_main(std::string nameSpace)
+{
+	if (nameSpace == "both" || nameSpace == "std")
 	{
-	if (argc == 1)
-		std::cout << "-----------------------------------\n\nFT MAP"<<std::endl;
-	ft::map<std::string, int> ftmap;	//empty constructor (1/3)
-	ft::map<std::string, int> ftmap1;
-	ftmap1.insert(ft::pair<std::string, int> ("ABC", 2));
-	ftmap1.insert(ft::pair<std::string, int> ("DEF", 52));
-	ftmap1.insert(ft::pair<std::string, int> ("GHI", 43));
-	ftmap1.insert(ft::pair<std::string, int> ("MNO", 12));
-	ftmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
-	ftmap1.insert(ft::pair<std::string, int> ("PQR", 0));
-	ftmap1.insert(ft::pair<std::string, int> ("STU", 42));
-	ft::map<std::string, int> ftmap2(++ftmap1.begin(), --ftmap1.end());//range constructor(2/3)
-	ft::map<std::string, int> ftmap3(ftmap2);//copy constructor (3/3)
-	ft::pair<std::string, int> ftpair("PAIR", 42);
-	testmap(ftmap, ftmap1, ftmap2, ftmap3, ftpair);
+		if (nameSpace == "both")
+			std::cout << "\n\nMAP\nSTD MAP" << std::endl;
+		//empty constructor (1/3)
+		std::map<std::string, int> stdmap;
+		std::map<std::string, int> stdmap1;
+		stdmap1.insert(std::pair<std::string, int> ("ABC", 2));
+		stdmap1.insert(std::pair<std::string, int> ("DEF", 52));
+		stdmap1.insert(std::pair<std::string, int> ("GHI", 43));
+		stdmap1.insert(std::pair<std::string, int> ("GHI", 13));
+		stdmap1.insert(std::pair<std::string, int> ("JKL", 2856));
+		stdmap1.insert(std::pair<std::string, int> ("MNO", 12));
+		stdmap1.insert(std::pair<std::string, int> ("PQR", 0));
+		stdmap1.insert(std::pair<std::string, int> ("STU", 42));
+		//range constructor(2/3)
+		std::map<std::string, int> stdmap2(++stdmap1.begin(), --stdmap1.end());
+		//copy constructor (3/3)
+		std::map<std::string, int> stdmap3(stdmap2);
+		std::pair<std::string, int> stdpair("PAIR", 42);
+		testmap(stdmap, stdmap1, stdmap2, stdmap3, stdpair);
 	}
-	return (0);
+	if (nameSpace == "both" || nameSpace == "ft")
+	{
+		if (nameSpace == "both")
+			std::cout << "-----------------------\n\nFT MAP"<<std::endl;
+		//empty constructor (1/3)
+		ft::map<std::string, int> ftmap;
+		ft::map<std::string, int> ftmap1;
+		ftmap1.insert(ft::pair<std::string, int> ("ABC", 2));
+		ftmap1.insert(ft::pair<std::string, int> ("DEF", 52));
+		ftmap1.insert(ft::pair<std::string, int> ("GHI", 43));
+		ftmap1.insert(ft::pair<std::string, int> ("GHI", 13));
+		ftmap1.insert(ft::pair<std::string, int> ("JKL", 2856));
+		ftmap1.insert(ft::pair<std::string, int> ("MNO", 12));
+		ftmap1.insert(ft::pair<std::string, int> ("PQR", 0));
+		ftmap1.insert(ft::pair<std::string, int> ("STU", 42));
+		//range constructor(2/3)
+		ft::map<std::string, int> ftmap2(++ftmap1.begin(), --ftmap1.end());
+		//copy constructor (3/3)
+		ft::map<std::string, int> ftmap3(ftmap2);
+		ft::pair<std::string, int> ftpair("PAIR", 42);
+		testmap(ftmap, ftmap1, ftmap2, ftmap3, ftpair);
+	}
 }

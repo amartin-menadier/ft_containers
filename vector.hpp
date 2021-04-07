@@ -96,7 +96,7 @@ namespace ft
 				: _size(n), _capacity(n){
 				_vector = new T[_capacity];
 				for (size_type i = 0; i < n; i++){_vector[i] = val;}
-			};
+			}; 
 			//range constructor(3)
 			vector(iterator first, iterator last)
 				: _size(0)

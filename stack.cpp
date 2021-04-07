@@ -17,7 +17,7 @@ void display_and_clear(stack &toprint)
 }
 
 template <class stack>
-void teststack(stack &stack1,stack &stack2)
+void teststack(stack &stack1,stack &stack2, stack &stack3)
 {
 	COUT("default constructor:", "", "");
 	display_and_clear(stack1);
@@ -27,38 +27,48 @@ void teststack(stack &stack1,stack &stack2)
 	stack1.push(42);
 	stack1.push(5);
 	stack1.pop();
+	stack2.push(3782);
+	stack2.push(422);
+	stack2.push(5553);
+	stack2.push(171742);
+	stack2.push(517);
+	COUT("Is stack1 equal to stack2?",(stack1 == stack2? "yes":"no"),"\n");
+	COUT("Is stack1 equal tostack3?",(stack1 ==stack3? "yes":"no"),"\n");
+	COUT("Then they are different?",(stack1 !=stack3? "yes":"no"),"\n");
+	COUT("Is stack1 smaller thanstack3?",(stack1 <stack3? "yes":"no"),"\n");
+	COUT("Is stack1 smaller or equal to stack2?",(stack1<=stack2?"yes":"no"),"\n");
+	COUT("Is stack1 bigger than stack3?",(stack1 > stack3? "yes":"no"),"\n");
+	COUT("Is stack1 bigger or equal to stack3?",(stack1>=stack3? "yes":"no"),"\n");
 	display_and_clear(stack1);
+	display_and_clear(stack2);
+	display_and_clear(stack3);
 	std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
+void	stack_main(std::string nameSpace)
 {
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "std"))
+	if (nameSpace == "both" || nameSpace == "std")
 	{
-		if (argc == 1)
-	std::cout << "STD stack"<<std::endl;
+		if (nameSpace == "both")
+			std::cout << "\n\nSTACK\nSTD STACK"<<std::endl;
 	std::vector<int> myvector (2,200);        // vector with 2 elements
-	std::stack<int,std::vector<int> > first;                    // empty stack
-	std::stack<int,std::vector<int> > second(myvector);
-
-	std::cout << "size of first: " << first.size() << '\n';
-	std::cout << "size of second: " << second.size() << '\n';
-
-	teststack(first, second);
+	std::stack<int,std::vector<int> > stdstack0;  // empty stack
+	std::stack<int,std::vector<int> > stdstack1(myvector);
+	std::cout << "size of first: " << stdstack0.size() << '\n';
+	std::cout << "size of second: " << stdstack1.size() << '\n';
+	std::stack<int, std::vector<int> > stdstack2(stdstack0);
+	teststack(stdstack0, stdstack1, stdstack2);
 	}
-
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
+	if (nameSpace == "both" || nameSpace == "ft")
 	{
-		if (argc == 1)
-	std::cout << "------------------------------------\n\nFT stack"<<std::endl;
+		if (nameSpace == "both")
+			std::cout << "---------------------\n\nFT STACK"<<std::endl;
 	ft::vector<int> myvector (2,200);        // vector with 2 elements
-	ft::stack<int> first;                    // empty stack
-	ft::stack<int,ft::vector<int> > second(myvector);
-
-	std::cout << "size of first: " << first.size() << '\n';
-	std::cout << "size of second: " << second.size() << '\n';
-
-	teststack(first, second);
+	ft::stack<int> ftstack0;                    // empty stack
+	ft::stack<int,ft::vector<int> > ftqueue1(myvector);
+	std::cout << "size of first: " << ftstack0.size() << '\n';
+	std::cout << "size of second: " << ftqueue1.size() << '\n';
+	ft::stack<int> ftstack2(ftstack0);
+	teststack(ftstack0, ftqueue1, ftstack2);
 	}
-	return (0);
 }

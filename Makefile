@@ -1,4 +1,4 @@
-NAME = ft_containers
+NAME = a.out
 
 SRCS = main.cpp
 
@@ -8,15 +8,9 @@ BUILD_DIR = obj
 OBJS = $(SRCS:.cpp=.o)
 OBJ = $(addprefix $(BUILD_DIR)/,$(OBJS))
 
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	@clang++ $(OBJ) -lm -o $(NAME) #-g -fsanitize=address 1>/dev/null
-	@echo "$(NAME) created"
-
-$(BUILD_DIR)/%.o: %.cpp Makefile
-	@mkdir -p $(BUILD_DIR) 1>/dev/null
-	@clang++ $(CFLAGS) -o $@ -c $< 1>/dev/null
+all: 
+	@clang++ $(CFLAGS) main.cpp containers.hpp list.cpp list.hpp map.cpp map.hpp queue.cpp queue.hpp stack.cpp stack.hpp vector.cpp vector.hpp
+	@rm *.hpp.gch 1>/dev/null
 
 clean:
 	@/bin/rm -rf $(BUILD_DIR) ft.txt std.txt 1>/dev/null
@@ -28,70 +22,49 @@ re:
 	@make fclean 1>/dev/null
 	@make all 1>/dev/null
 
-run:
-	@make list
-	@make vector
-	@make fclean  1>/dev/null
+print: list vector map queue stack
+
+all_compare: list_compare vector_compare map_compare queue_compare stack_compare
 
 list: 
-	@clang++ $(CFLAGS) list.hpp containers.hpp list.cpp 
-	@./a.out 
-	@rm a.out *.hpp.gch 1>/dev/null
+	@./a.out list
 
 list_compare:
-	@clang++ $(CFLAGS) list.hpp containers.hpp list.cpp 
-	@./a.out std 1>./std.txt
-	@./a.out ft 1>./ft.txt
+	@./a.out list std 1>./std.txt
+	@./a.out list ft 1>./ft.txt
 	@-diff std.txt ft.txt 
-	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
 vector: 
-	@clang++ $(CFLAGS) vector.hpp containers.hpp vector.cpp 
-	@./a.out 
-	@rm a.out *.hpp.gch 1>/dev/null
+	@./a.out vector
 
 vector_compare:
-	@clang++ $(CFLAGS) vector.hpp containers.hpp vector.cpp 
-	@./a.out std 1>./std.txt
-	@./a.out ft 1>./ft.txt
+	@./a.out vector std 1>./std.txt
+	@./a.out vector ft 1>./ft.txt
 	@- diff std.txt ft.txt
-	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
 map: 
-	@clang++ $(CFLAGS) map.hpp containers.hpp map.cpp 
-	@./a.out 
-	@rm a.out *.hpp.gch 1>/dev/null
+	@./a.out map
 
 map_compare:
-	@clang++ $(CFLAGS) map.hpp containers.hpp map.cpp 
-	@./a.out std 1>./std.txt
-	@./a.out ft 1>./ft.txt
+	@./a.out map std 1>./std.txt
+	@./a.out map ft 1>./ft.txt
 	@- diff std.txt ft.txt
-	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
 stack: 
-	@clang++ $(CFLAGS) stack.hpp containers.hpp stack.cpp 
-	@./a.out 
-	@rm a.out *.hpp.gch 1>/dev/null
+	@./a.out stack
 
 stack_compare:
-	@clang++ $(CFLAGS) stack.hpp containers.hpp stack.cpp 
-	@./a.out std 1>./std.txt
-	@./a.out ft 1>./ft.txt
+	@./a.out stack std 1>./std.txt
+	@./a.out stack ft 1>./ft.txt
 	@- diff std.txt ft.txt
-	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
-queue: 
-	@clang++ $(CFLAGS) queue.hpp containers.hpp queue.cpp 
-	@./a.out 
-	@rm a.out *.hpp.gch 1>/dev/null
+queue:
+	@./a.out queue
 
 queue_compare:
-	@clang++ $(CFLAGS) queue.hpp containers.hpp queue.cpp 
-	@./a.out std 1>./std.txt
-	@./a.out ft 1>./ft.txt
+	@./a.out queue std 1>./std.txt
+	@./a.out queue ft 1>./ft.txt
 	@- diff std.txt ft.txt
-	@rm a.out ft.txt std.txt *.hpp.gch 1>/dev/null
 
 valgrind:
 	@make re
@@ -100,4 +73,4 @@ valgrind:
 .PHONY: all, clean, fclean, re, all
 
 # '-' before command instructs to continue even if the command returns an error value
-# '@' before command instructs not to echo it on the screen
+# '@' before command instructs not to echo it 

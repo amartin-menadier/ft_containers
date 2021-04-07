@@ -116,33 +116,38 @@ void testList(list &list1, list &list2, list &list3, list &list4)
 	display(list1);
 	display(list4);
 	list1.clear();
-	COUT("Is list1 empty after clear?", (list1.empty()? "yes":"no"), "");
-
+	COUT("Is list1 empty after clear?", (list1.empty()? "yes":"no"),"");
 	std::cout << std::endl;
 }
 
-int main(int argc, char **argv)
+void	list_main(std::string nameSpace)
 {
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "std"))
+	if (nameSpace == "both" || nameSpace == "std")
 	{
-		if (argc == 1)
-	std::cout << "LIST\nSTD LIST" << std::endl;
-	std::list<int> stdList;	//default constructor (1/4)
-	std::list<int> stdList2(5, 4);//fill constructor (2/4)
-	std::list<int> stdList3(++stdList2.begin(), --stdList2.end());//range constructor(3/4)
-	std::list<int> stdList4(stdList2);//copy constructor (4/4)
-	testList(stdList, stdList2, stdList3, stdList4);
+		if (nameSpace == "both")
+			std::cout << "\n\nLIST\nSTD LIST" << std::endl;
+		//default constructor (1/4)
+		std::list<int> stdList;
+		//fill constructor (2/4)
+		std::list<int> stdList2(5, 4);
+		//range constructor(3/4)
+		std::list<int> stdList3(++stdList2.begin(), --stdList2.end());
+		//copy constructor (4/4)
+		std::list<int> stdList4(stdList2);
+		testList(stdList, stdList2, stdList3, stdList4);
 	}
-
-	if (argc == 1 || (argc == 2 && static_cast<std::string>(argv[1]) == "ft"))
+	if (nameSpace == "both" || nameSpace == "ft")
 	{
-		if (argc == 1)
-	std::cout << "------------------------------------\n\nFT LIST" << std::endl;
-	ft::list<int> ftList;	//default constructor (1/4)
-	ft::list<int> ftList2(5, 4);//fill constructor (2/4)
-	ft::list<int> ftList3(++ftList2.begin(), --ftList2.end());//range constructor(3/4)
-	ft::list<int> ftList4(ftList2);//copy constructor (4/4)
-	testList(ftList, ftList2, ftList3, ftList4);
+		if (nameSpace == "both")
+			std::cout << "--------------------\n\nFT LIST" << std::endl;
+		//default constructor (1/4)
+		ft::list<int> ftList;
+		//fill constructor (2/4)
+		ft::list<int> ftList2(5, 4);
+		//range constructor(3/4)
+		ft::list<int> ftList3(++ftList2.begin(), --ftList2.end());
+		//copy constructor (4/4)
+		ft::list<int> ftList4(ftList2);
+		testList(ftList, ftList2, ftList3, ftList4);
 	}
-	return (0);
 }
