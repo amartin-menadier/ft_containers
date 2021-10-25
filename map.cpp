@@ -1,6 +1,6 @@
 #include "map.hpp"
 #include "containers.hpp"
-#include <map>
+#include <map>    
 
 template <class map>
 void display(map &toprint)
@@ -109,3 +109,5 @@ void map_main(std::string nameSpace)
 		testmap(ftmap, ftmap1, ftmap2, ftmap3, ftpair);
 	}
 }
+
+//random
